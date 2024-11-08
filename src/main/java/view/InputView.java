@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import store.Products;
+import store.Promotions;
 
 public class InputView {
 
     private static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
+    private static final String PROMOTIONS_FILE_PATH = "src/main/resources/promotions.md";
     private static final String NOT_FOUND_FILE = "파일을 읽어들일 수 없습니다.";
 
     public Products inputProducts() {
@@ -27,4 +29,22 @@ public class InputView {
 
         return new Products(productContents);
     }
+
+    public Products inputPromotions() {
+        List<String> promotionContents = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(PROMOTIONS_FILE_PATH))) {
+            String promotionContent;
+            reader.readLine();
+            while ((promotionContent = reader.readLine()) != null) {
+                promotionContents.add(promotionContent);
+            }
+        } catch (IOException ioException) {
+            throw new IllegalArgumentException(NOT_FOUND_FILE);
+        }
+
+        return new Promotions(promotionContents);
+    }
+
+ 
 }
