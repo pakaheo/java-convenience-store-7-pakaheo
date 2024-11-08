@@ -1,2 +1,16 @@
-package store;public class ProductsTest {
+package store;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
+public class ProductsTest {
+
+    @Test
+    void 상품들_생성() {
+        List<String> productGroup = List.of("콜라,1000,10,탄산2+1", "사이다,1000,100,null");
+
+        assertThat(new Products(productGroup)).isEqualTo(new Products(productGroup));
+    }
 }
