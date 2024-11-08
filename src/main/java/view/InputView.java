@@ -1,10 +1,12 @@
 package view;
 
+import camp.nextstep.edu.missionutils.Console;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import store.OrderDetails;
 import store.product.Products;
 import store.promotion.Promotions;
 
@@ -46,5 +48,7 @@ public class InputView {
         return new Promotions(promotionContents);
     }
 
-
+    public OrderDetails inputProductAndQuantity() {
+        return new OrderDetails(Console.readLine());
+    }
 }
