@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-public class OrderDetailsTest {
+public class OrderDetailsParserTest {
 
     @Test
     void 주문내역_생성() {
         String input = "[콜라-3],[사이다-4]";
 
-        assertThat(new OrderDetails(input)).isEqualTo(new OrderDetails(input));
+        assertThat(OrderDetailsParser.parse(input)).hasSize(2);
     }
 }
