@@ -1,10 +1,9 @@
-package store;
+package store.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import store.product.Products;
 
 public class ProductsTest {
 

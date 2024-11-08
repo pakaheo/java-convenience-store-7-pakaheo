@@ -5,8 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import store.Products;
-import store.Promotions;
+import store.product.Products;
+import store.promotion.Promotions;
 
 public class InputView {
 
@@ -30,7 +30,7 @@ public class InputView {
         return new Products(productContents);
     }
 
-    public Products inputPromotions() {
+    public Promotions inputPromotions() {
         List<String> promotionContents = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(PROMOTIONS_FILE_PATH))) {
@@ -46,5 +46,5 @@ public class InputView {
         return new Promotions(promotionContents);
     }
 
- 
+
 }

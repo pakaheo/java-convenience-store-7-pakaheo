@@ -1,9 +1,8 @@
-package store;
+package store.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import store.product.Product;
 
 public class ProductTest {
 
