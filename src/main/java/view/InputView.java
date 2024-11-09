@@ -51,4 +51,8 @@ public class InputView {
     public OrderDetails inputProductAndQuantity() {
         return new OrderDetails(Console.readLine());
     }
+
+    public String inputAnswer() {
+        return Console.readLine();
+    }
 }

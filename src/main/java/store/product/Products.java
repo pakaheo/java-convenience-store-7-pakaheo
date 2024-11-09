@@ -2,8 +2,11 @@ package store.product;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Products {
+
+    private static final String LINE_CHANGE = "\n";
 
     private final List<Product> productGroup;
 
@@ -25,5 +28,10 @@ public class Products {
     @Override
     public int hashCode() {
         return Objects.hash(productGroup);
+    }
+
+    @Override
+    public String toString() {
+        return productGroup.stream().map(Product::toString).collect(Collectors.joining(LINE_CHANGE));
     }
 }
