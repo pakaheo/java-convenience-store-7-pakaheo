@@ -15,12 +15,12 @@ public enum RegularInventory implements Inventory {
     }
 
     @Override
-    public void deduct(String productName, int count) {
-
+    public Product findByName(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName)).findFirst().orElse(null);
     }
 
     @Override
-    public List<Product> getProductGroup() {
-        return productGroup;
+    public void deduct(String productName, int count) {
+        findByName(productName).deduct(count);
     }
 }

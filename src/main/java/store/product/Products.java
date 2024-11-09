@@ -13,7 +13,7 @@ public class Products {
 
     private final List<Product> productGroup;
 
-    public Products(final List<String> productContents) {
+    public Products(List<String> productContents) {
         this.productGroup = ProductParser.parse(productContents);
         classify();
     }
@@ -23,11 +23,20 @@ public class Products {
         PromotionalInventory.PROMOTIONAL_INVENTORY.stackProducts(productGroup);
     }
 
-    public Product findByName(String productName) {
-        return productGroup.stream()
-                .filter(product -> product.hasName(productName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf()));
+    public void deductInventory(String productName, int purchaseCount) {
+        checkExistProduct(productName);
+        checkQuantity(productName, purchaseCount);
+
+        PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
+    }
+
+    public void checkExistProduct(String productName) {
+        Product promotionProduct = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
+        Product regularProduct = RegularInventory.REGULAR_INVENTORY.findByName(productName);
+
+        if (promotionProduct == null && regularProduct == null) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf());
+        }
     }
 
     public void checkQuantity(String productName, int purchaseCount) {

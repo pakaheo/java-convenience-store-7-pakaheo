@@ -59,6 +59,12 @@ public class Product {
         return Math.min(this.quantity, purchaseCount);
     }
 
+    public int deduct(int count) {
+        int decrease = Math.min(quantity, count);
+        quantity -= decrease;
+        return decrease;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

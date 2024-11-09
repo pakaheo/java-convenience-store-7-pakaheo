@@ -15,12 +15,21 @@ public enum PromotionalInventory implements Inventory {
     }
 
     @Override
-    public void deduct(String productName, int count) {
-
+    public Product findByName(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName)).findFirst().orElse(null);
     }
 
     @Override
-    public List<Product> getProductGroup() {
-        return productGroup;
+    public void deduct(String productName, int count) {
+        Product product = findByName(productName);
+        if (product == null) {
+            RegularInventory.REGULAR_INVENTORY.deduct(productName, count);
+            return;
+        }
+
+        int actualDecrease = product.deduct(count);
+        if (actualDecrease < count) {
+            RegularInventory.REGULAR_INVENTORY.deduct(productName, count - actualDecrease);
+        }
     }
 }

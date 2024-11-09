@@ -7,7 +7,7 @@ public interface Inventory {
 
     void stackProducts(List<Product> productGroup);
 
-    void deduct(String productName, int count);
+    Product findByName(String productName);
 
-    List<Product> getProductGroup();
+    void deduct(String productName, int count);
 }
