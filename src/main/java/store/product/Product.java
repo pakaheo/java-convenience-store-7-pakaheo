@@ -2,6 +2,7 @@ package store.product;
 
 import java.text.DecimalFormat;
 import java.util.Objects;
+import store.promotion.Promotion;
 
 public class Product {
 
@@ -16,13 +17,13 @@ public class Product {
     private final String name;
     private final int price;
     private int quantity;
-    private final String promotionName;
+    private final Promotion promotion;
 
-    public Product(final String name, final int price, int quantity, final String promotionName) {
+    public Product(final String name, final int price, int quantity, final Promotion promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.promotionName = promotionName;
+        this.promotion = promotion;
     }
 
     private String currentQuantity() {
@@ -33,10 +34,10 @@ public class Product {
     }
 
     private String currentPromotion() {
-        if (promotionName == null) {
+        if (promotion == null) {
             return NO_WORD;
         }
-        return SPACE + promotionName;
+        return SPACE + promotion.getName();
     }
 
     private String formalize(int price) {
@@ -52,7 +53,7 @@ public class Product {
     }
 
     public boolean isPromotional() {
-        return promotionName != null;
+        return promotion != null;
     }
 
     public int currentQuantity(int purchaseCount) {
@@ -74,12 +75,12 @@ public class Product {
             return false;
         }
         return price == product.price && quantity == product.quantity && Objects.equals(name, product.name)
-                && Objects.equals(promotionName, product.promotionName);
+                && Objects.equals(promotion, product.promotion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price, quantity, promotionName);
+        return Objects.hash(name, price, quantity, promotion);
     }
 
     @Override

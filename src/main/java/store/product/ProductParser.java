@@ -2,6 +2,8 @@ package store.product;
 
 import java.util.ArrayList;
 import java.util.List;
+import store.promotion.Promotion;
+import store.promotion.PromotionParser;
 
 public class ProductParser {
 
@@ -27,10 +29,10 @@ public class ProductParser {
         return Integer.parseInt(text);
     }
 
-    private static String checkNull(String text) {
+    private static Promotion checkNull(String text) {
         if (text.equals(TEXT_NULL)) {
             return null;
         }
-        return text;
+        return PromotionParser.getPromotion(text);
     }
 }

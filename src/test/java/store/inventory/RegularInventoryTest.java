@@ -2,6 +2,7 @@ package store.inventory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import constants.Constants;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import store.product.Product;
 
 public class RegularInventoryTest {
 
-    private static final Product COKE = new Product("콜라", 1000, 10, "탄산2+1");
+    private static final Product COKE = new Product("콜라", 1000, 10, Constants.TWO_PLUS_ONE_PROMOTION);
     private static final Product CIDER = new Product("사이다", 1000, 10, null);
     private static final RegularInventory REGULAR_INVENTORY = RegularInventory.REGULAR_INVENTORY;
 

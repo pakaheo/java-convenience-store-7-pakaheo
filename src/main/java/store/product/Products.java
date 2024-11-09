@@ -56,6 +56,10 @@ public class Products {
                 .sum();
     }
 
+    public Product findProducts(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName)).findFirst().orElse(null);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
