@@ -56,19 +56,8 @@ public class Products {
                 .sum();
     }
 
-    public int calculateTotal(String productName, int purchaseCount) {
-        return productGroup.stream()
-                .filter(product -> product.hasName(productName))
-                .mapToInt(product -> product.calculateSubTotal(purchaseCount))
-                .sum();
-    }
-
-    public int calculatePromotionDiscount(String productName, int purchaseCount) {
-        int promotionDeducted = deductInventory(productName, purchaseCount);
-        return productGroup.stream()
-                .filter(product -> product.hasName(productName))
-                .mapToInt(product -> product.calculatePromotionDiscount(promotionDeducted))
-                .sum();
+    public List<Product> getOrderedProduct(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName)).toList();
     }
 
     @Override

@@ -3,6 +3,7 @@ package store.product;
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.text.DecimalFormat;
 import java.util.Objects;
+import store.MemberShip;
 import store.promotion.Promotion;
 
 public class Product {
@@ -70,6 +71,13 @@ public class Product {
     public int calculatePromotionDiscount(int purchaseCount) {
         if (isPromotional()) {
             return price * promotion.calculateDiscount(purchaseCount);
+        }
+        return 0;
+    }
+
+    public int calculateMemberShipDiscount(int purchaseCount) {
+        if (!isPromotional()) {
+            return MemberShip.apply(price, purchaseCount);
         }
         return 0;
     }
