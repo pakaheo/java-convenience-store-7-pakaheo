@@ -18,4 +18,8 @@ public class OutputView {
     protected void introduceLackPromotionStock(String productName, int count) {
         System.out.println("현재 " + productName + " " + count + "개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)");
     }
+
+    protected void introduceMembership() {
+        System.out.println("멤버십 할인을 받으시겠습니까? (Y/N)");
+    }
 }

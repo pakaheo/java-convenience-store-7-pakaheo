@@ -19,4 +19,9 @@ public class OptionView {
         output.introduceLackPromotionStock(productName, count);
         return input.inputAnswer();
     }
+
+    public String membershipCase() {
+        output.introduceMembership();
+        return input.inputAnswer();
+    }
 }
