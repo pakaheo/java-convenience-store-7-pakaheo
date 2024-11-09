@@ -15,9 +15,10 @@ public class Products {
 
     public Products(final List<String> productContents) {
         this.productGroup = ProductParser.parse(productContents);
+        classify();
     }
 
-    public void classify() {
+    private void classify() {
         RegularInventory.REGULAR_INVENTORY.stackProducts(productGroup);
         PromotionalInventory.PROMOTIONAL_INVENTORY.stackProducts(productGroup);
     }
@@ -29,15 +30,21 @@ public class Products {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf()));
     }
 
-    public void checkQuantity(String productName, int quantity) {
-        int actualQuantity = productGroup.stream()
-                .filter(product -> product.hasName(productName))
-                .mapToInt(product -> product.currentQuantity(quantity))
-                .sum();
-
-        if (actualQuantity < quantity) {
+    public void checkQuantity(String productName, int purchaseCount) {
+        if (isExceedQuantity(productName, purchaseCount)) {
             throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.valueOf());
         }
+    }
+
+    private boolean isExceedQuantity(String productName, int purchaseCount) {
+        return calculateActualQuantity(productName, purchaseCount) < purchaseCount;
+    }
+
+    private int calculateActualQuantity(String productName, int purchaseCount) {
+        return productGroup.stream()
+                .filter(product -> product.hasName(productName))
+                .mapToInt(product -> product.currentQuantity(purchaseCount))
+                .sum();
     }
 
     @Override

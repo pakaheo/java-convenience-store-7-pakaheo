@@ -55,8 +55,8 @@ public class Product {
         return promotionName != null;
     }
 
-    public int currentQuantity(int quantity) {
-        return Math.min(this.quantity, quantity);
+    public int currentQuantity(int purchaseCount) {
+        return Math.min(this.quantity, purchaseCount);
     }
 
     @Override

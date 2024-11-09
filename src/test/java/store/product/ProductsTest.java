@@ -6,8 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import constants.ErrorMessage;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import store.inventory.PromotionalInventory;
-import store.inventory.RegularInventory;
 
 public class ProductsTest {
 
@@ -50,16 +48,5 @@ public class ProductsTest {
         assertThatThrownBy(() -> new Products(productGroup).checkQuantity("콜라", 11))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.EXCEED_QUANTITY.valueOf());
-    }
-
-    @Test
-    void 일반재고와_프로모션재고로_분류하기() {
-        List<String> productGroup = List.of("콜라,1000,10,탄산2+1", "사이다,1000,0,null");
-        Products products = new Products(productGroup);
-
-        products.classify();
-
-        assertThat(RegularInventory.REGULAR_INVENTORY.getProductGroup()).isNotNull();
-        assertThat(PromotionalInventory.PROMOTIONAL_INVENTORY.getProductGroup()).isNotNull();
     }
 }
