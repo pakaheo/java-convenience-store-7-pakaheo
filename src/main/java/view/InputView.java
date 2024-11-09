@@ -52,7 +52,7 @@ public class InputView {
         return new OrderDetails(Console.readLine());
     }
 
-    public String inputAnswer() {
+    protected String inputAnswer() {
         return Console.readLine();
     }
 }
