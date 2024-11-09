@@ -3,15 +3,18 @@ package store;
 import java.util.Iterator;
 import java.util.Map;
 import store.product.Products;
+import view.OptionView;
 
 public class Order {
 
     private final Products products;
     private final OrderDetails orderDetails;
+    private final OptionView option;
 
-    public Order(final Products products, final OrderDetails orderDetails) {
+    public Order(final Products products, final OrderDetails orderDetails, OptionView option) {
         this.products = products;
         this.orderDetails = orderDetails;
+        this.option = option;
     }
 
     public int progress() {
@@ -40,7 +43,11 @@ public class Order {
         if (promotionDeducted > 0) {
             return calculatePromotionDiscount(productName, promotionDeducted);
         }
-        return calculateMemberShipDiscount(productName, purchaseCount);
+
+        if (option.membershipOption().equals("Y")) {
+            return calculateMemberShipDiscount(productName, purchaseCount);
+        }
+        return 0;
     }
 
     public int calculatePromotionDiscount(String productName, int promotionDeducted) {
