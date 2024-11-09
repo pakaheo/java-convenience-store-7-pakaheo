@@ -1,5 +1,6 @@
 package view;
 
+import store.Receipt;
 import store.product.Products;
 
 public class OutputView {
@@ -21,5 +22,9 @@ public class OutputView {
 
     protected void introduceMembership() {
         System.out.println("멤버십 할인을 받으시겠습니까? (Y/N)");
+    }
+
+    public void showReceipt(Receipt receipt) {
+        System.out.println(receipt);
     }
 }
