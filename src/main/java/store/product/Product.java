@@ -51,6 +51,14 @@ public class Product {
         return price * purchaseCount;
     }
 
+    public boolean isPromotional() {
+        return promotionName != null;
+    }
+
+    public int currentQuantity(int quantity) {
+        return Math.min(this.quantity, quantity);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

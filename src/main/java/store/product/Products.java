@@ -1,8 +1,11 @@
 package store.product;
 
+import constants.ErrorMessage;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import store.inventory.PromotionalInventory;
+import store.inventory.RegularInventory;
 
 public class Products {
 
@@ -14,8 +17,27 @@ public class Products {
         this.productGroup = ProductParser.parse(productContents);
     }
 
+    public void classify() {
+        RegularInventory.REGULAR_INVENTORY.stackProducts(productGroup);
+        PromotionalInventory.PROMOTIONAL_INVENTORY.stackProducts(productGroup);
+    }
+
     public Product findByName(String productName) {
-        return productGroup.stream().filter(product -> product.hasName(productName)).findFirst().orElse(null);
+        return productGroup.stream()
+                .filter(product -> product.hasName(productName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf()));
+    }
+
+    public void checkQuantity(String productName, int quantity) {
+        int actualQuantity = productGroup.stream()
+                .filter(product -> product.hasName(productName))
+                .mapToInt(product -> product.currentQuantity(quantity))
+                .sum();
+
+        if (actualQuantity < quantity) {
+            throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.valueOf());
+        }
     }
 
     @Override
