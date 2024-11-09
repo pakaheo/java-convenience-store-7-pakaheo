@@ -20,7 +20,8 @@ public enum RegularInventory implements Inventory {
     }
 
     @Override
-    public void deduct(String productName, int count) {
+    public int deduct(String productName, int count) {
         findByName(productName).deduct(count);
+        return count;
     }
 }

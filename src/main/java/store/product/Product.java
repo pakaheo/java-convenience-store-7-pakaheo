@@ -1,5 +1,6 @@
 package store.product;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.text.DecimalFormat;
 import java.util.Objects;
 import store.promotion.Promotion;
@@ -53,7 +54,7 @@ public class Product {
     }
 
     public boolean isPromotional() {
-        return promotion != null;
+        return promotion != null && promotion.isActive(DateTimes.now().toLocalDate());
     }
 
     public int currentQuantity(int purchaseCount) {
@@ -63,7 +64,15 @@ public class Product {
     public int deduct(int count) {
         int decrease = Math.min(quantity, count);
         quantity -= decrease;
+        calculatePromotionDiscount(count);
         return decrease;
+    }
+
+    public int calculatePromotionDiscount(int purchaseCount) {
+        if (isPromotional()) {
+            return promotion.calculateDiscount(price, purchaseCount);
+        }
+        return 0;
     }
 
     @Override

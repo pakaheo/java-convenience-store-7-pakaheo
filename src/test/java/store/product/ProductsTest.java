@@ -5,11 +5,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import constants.ErrorMessage;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.inventory.PromotionalInventory;
 import store.inventory.RegularInventory;
+import store.promotion.Promotions;
 
 public class ProductsTest {
+
+    @BeforeEach
+    void set_up() {
+        Promotions promotions = new Promotions(List.of("탄산2+1,2,1,2024-01-01,2024-12-31"));
+    }
 
     @Test
     void 상품들_생성() {

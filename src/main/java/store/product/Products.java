@@ -23,11 +23,11 @@ public class Products {
         PromotionalInventory.PROMOTIONAL_INVENTORY.stackProducts(productGroup);
     }
 
-    public void deductInventory(String productName, int purchaseCount) {
+    public int deductInventory(String productName, int purchaseCount) {
         checkExistProduct(productName);
         checkQuantity(productName, purchaseCount);
 
-        PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
+        return PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
     }
 
     public void checkExistProduct(String productName) {

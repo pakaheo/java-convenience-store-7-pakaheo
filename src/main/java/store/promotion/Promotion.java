@@ -24,6 +24,10 @@ public class Promotion {
         return now.isAfter(startDate) && now.isBefore(endDate);
     }
 
+    public int calculateDiscount(int price, int purchaseCount) {
+        return purchaseCount / (buy + get) * get * price;
+    }
+
     public String getName() {
         return name;
     }

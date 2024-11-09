@@ -20,4 +20,12 @@ public class DiscountManager {
                         .calculateSubTotal(entry.getValue()))
                 .sum();
     }
+
+    public int calculatePromotionDiscount() {
+        return orders.entrySet().stream()
+                .mapToInt(entry -> products
+                        .findProducts(entry.getKey())
+                        .calculatePromotionDiscount(entry.getValue()))
+                .sum();
+    }
 }

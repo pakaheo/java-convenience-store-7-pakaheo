@@ -20,16 +20,18 @@ public enum PromotionalInventory implements Inventory {
     }
 
     @Override
-    public void deduct(String productName, int count) {
+    public int deduct(String productName, int count) {
         Product product = findByName(productName);
         if (product == null) {
             RegularInventory.REGULAR_INVENTORY.deduct(productName, count);
-            return;
+            return 0;
         }
 
         int actualDecrease = product.deduct(count);
         if (actualDecrease < count) {
             RegularInventory.REGULAR_INVENTORY.deduct(productName, count - actualDecrease);
         }
+
+        return actualDecrease;
     }
 }
