@@ -1,11 +1,11 @@
 package view;
 
-public class OptionView {
+public class CaseView {
 
     private final InputView input;
     private final OutputView output;
 
-    public OptionView(InputView input, OutputView output) {
+    public CaseView(InputView input, OutputView output) {
         this.input = input;
         this.output = output;
     }
@@ -22,6 +22,11 @@ public class OptionView {
 
     public String membershipCase() {
         output.introduceMembership();
+        return input.inputAnswer();
+    }
+
+    public String morePurchaseCase() {
+        output.introduceMorePurchase();
         return input.inputAnswer();
     }
 }
