@@ -14,4 +14,9 @@ public class OptionView {
         output.introduceMoreProduct(productName, count);
         return input.inputAnswer();
     }
+
+    public String lackPromotionStockCase(String productName, int count) {
+        output.introduceLackPromotionStock(productName, count);
+        return input.inputAnswer();
+    }
 }
