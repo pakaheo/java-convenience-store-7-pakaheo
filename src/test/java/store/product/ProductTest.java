@@ -23,4 +23,19 @@ public class ProductTest {
         assertThat(coke.toString()).isEqualTo("- 콜라 1,000원 10개 탄산2+1");
         assertThat(cider.toString()).isEqualTo("- 사이다 1,000원 재고 없음");
     }
+
+    @Test
+    void 상품_이름이_같은지_비교() {
+        Product coke = new Product("콜라", 1_000, 10, "탄산2+1");
+
+        assertThat(coke.hasName("콜라")).isTrue();
+        assertThat(coke.hasName("코올라")).isFalse();
+    }
+
+    @Test
+    void 상품_소계_계산() {
+        Product coke = new Product("콜라", 1_000, 10, "탄산2+1");
+
+        assertThat(coke.calculateSubTotal(3)).isEqualTo(3_000);
+    }
 }

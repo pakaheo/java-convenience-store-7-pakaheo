@@ -43,6 +43,14 @@ public class Product {
         return PRICE_FORMAT.format(price);
     }
 
+    public boolean hasName(String productName) {
+        return name.equals(productName);
+    }
+
+    public int calculateSubTotal(int purchaseCount) {
+        return price * purchaseCount;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

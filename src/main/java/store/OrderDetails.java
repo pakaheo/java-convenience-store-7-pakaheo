@@ -11,6 +11,10 @@ public class OrderDetails {
         this.orders = OrderDetailsParser.parse(input);
     }
 
+    public Map<String, Integer> getOrders() {
+        return orders;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

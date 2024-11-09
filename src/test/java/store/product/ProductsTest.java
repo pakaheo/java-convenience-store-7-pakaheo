@@ -21,4 +21,12 @@ public class ProductsTest {
         assertThat(new Products(productGroup).toString())
                 .isEqualTo("- 콜라 1,000원 10개 탄산2+1\n- 사이다 1,000원 재고 없음");
     }
+
+    @Test
+    void 상품명으로_상품_가져오기() {
+        List<String> productGroup = List.of("콜라,1000,10,탄산2+1", "사이다,1000,0,null");
+
+        assertThat(new Products(productGroup).findByName("콜라"))
+                .isEqualTo(new Product("콜라", 1_000, 10, "탄산2+1"));
+    }
 }
