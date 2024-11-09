@@ -15,7 +15,8 @@ public class ProductsTest {
 
     @BeforeEach
     void set_up() {
-        Promotions promotions = new Promotions(List.of("탄산2+1,2,1,2024-01-01,2024-12-31"));
+        Promotions promotions = new Promotions(
+                List.of("탄산2+1,2,1,2024-01-01,2024-12-31", "MD추천상품,1,1,2024-01-01,2024-12-31"));
     }
 
     @Test
@@ -81,5 +82,21 @@ public class ProductsTest {
 
         assertThat(promotionCoke.toString()).isEqualTo("- 콜라 1,000원 재고 없음 탄산2+1");
         assertThat(regularCoke.toString()).isEqualTo("- 콜라 1,000원 8개");
+    }
+
+    @Test
+    void 총구매액_계산() {
+        Products products = new Products(List.of("콜라,1000,10,탄산2+1", "사이다,1500,10,null"));
+
+        int total = products.calculateTotal("콜라", 5) + products.calculateTotal("사이다", 3);
+        assertThat(total).isEqualTo(9_500);
+    }
+
+    @Test
+    void 프로모션_할인_금액_계산() {
+        Products products = new Products(List.of("콜라,1000,10,탄산2+1", "사이다,1000,10,MD추천상품"));
+
+        assertThat(products.calculatePromotionDiscount("콜라", 7)).isEqualTo(2_000);
+        assertThat(products.calculatePromotionDiscount("사이다", 7)).isEqualTo(3_000);
     }
 }

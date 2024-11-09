@@ -28,10 +28,14 @@ public enum PromotionalInventory implements Inventory {
         }
 
         int actualDecrease = product.deduct(count);
-        if (actualDecrease < count) {
-            RegularInventory.REGULAR_INVENTORY.deduct(productName, count - actualDecrease);
-        }
+        changeRegularInventory(productName, count - actualDecrease);
 
         return actualDecrease;
+    }
+
+    private void changeRegularInventory(String productName, int rest) {
+        if (rest > 0) {
+            RegularInventory.REGULAR_INVENTORY.deduct(productName, rest);
+        }
     }
 }

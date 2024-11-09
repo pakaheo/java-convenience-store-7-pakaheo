@@ -64,13 +64,12 @@ public class Product {
     public int deduct(int count) {
         int decrease = Math.min(quantity, count);
         quantity -= decrease;
-        calculatePromotionDiscount(count);
         return decrease;
     }
 
     public int calculatePromotionDiscount(int purchaseCount) {
         if (isPromotional()) {
-            return promotion.calculateDiscount(price, purchaseCount);
+            return price * promotion.calculateDiscount(purchaseCount);
         }
         return 0;
     }

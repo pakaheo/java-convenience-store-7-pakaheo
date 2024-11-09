@@ -7,13 +7,10 @@ public class Receipt {
 
     private final OrderDetails orderDetails;
     private final PromotionDetails promotionDetails;
-    private final DiscountManager discountManager;
 
-    public Receipt(final OrderDetails orderDetails, final PromotionDetails promotionDetails,
-                   final DiscountManager discountManager) {
+    public Receipt(final OrderDetails orderDetails, final PromotionDetails promotionDetails) {
         this.orderDetails = orderDetails;
         this.promotionDetails = promotionDetails;
-        this.discountManager = discountManager;
     }
 
     @Override
@@ -25,7 +22,6 @@ public class Receipt {
         result += SEPARATE_LINE_SIGN.repeat(13) + "증\t정" + SEPARATE_LINE_SIGN.repeat(13) + LINE_CHANGE;
         result += promotionDetails;
         result += SEPARATE_LINE_SIGN.repeat(36);
-        System.out.println(discountManager.toString());
 
         return result;
     }
