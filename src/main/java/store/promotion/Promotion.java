@@ -20,6 +20,14 @@ public class Promotion {
         this.endDate = endDate;
     }
 
+    public boolean isActive(LocalDate now) {
+        return now.isAfter(startDate) && now.isBefore(endDate);
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
