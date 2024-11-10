@@ -33,24 +33,9 @@ public enum PromotionalInventory implements Inventory {
     }
 
     private int calculateActualDecrease(Product product, String productName, int count) {
-//        int actualDecrease = product.deduct(count);
-//        int nonPromotionCount = count % product.getPromotionEligibleCount();
-//        changeRegularInventory(productName, count - actualDecrease, nonPromotionCount);
-//
-//        return actualDecrease;
-        int promotionEligibleCount = product.getPromotionEligibleCount();
-        int totalPromotionSets = count / promotionEligibleCount;
-        int actualPromotionItems = totalPromotionSets * promotionEligibleCount;
-
-        // 프로모션 재고에서 가능한 만큼 차감
-        int actualDecrease = product.compareQuantity(actualPromotionItems);
-        product.deduct(actualDecrease);
-
-        // 프로모션으로 제공할 수 없는 수량 계산
-        int remainingCount = count - actualDecrease;
-        int nonPromotionCount = remainingCount % promotionEligibleCount;
-
-        changeRegularInventory(productName, remainingCount, nonPromotionCount);
+        int actualDecrease = product.deduct(count);
+        int nonPromotionCount = count % product.getPromotionEligibleCount();
+        changeRegularInventory(productName, count - actualDecrease, nonPromotionCount);
 
         return actualDecrease;
     }
