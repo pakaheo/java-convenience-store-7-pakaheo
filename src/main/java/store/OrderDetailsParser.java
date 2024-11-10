@@ -1,5 +1,6 @@
 package store;
 
+import constants.ErrorMessage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -14,12 +15,29 @@ public class OrderDetailsParser {
     public static Map<String, Integer> parse(String input) {
         Map<String, Integer> orders = new HashMap<>();
         Matcher matcher = createMatcher(input);
+        int lastMatch = 0;
 
         while (canFind(matcher)) {
             orders.put(getProductName(matcher), getPurchaseCount(matcher));
+            lastMatch = matcher.end();
+            checkSeparate(lastMatch, input);
         }
 
+        checkInvalidInput(lastMatch, input.length());
+
         return orders;
+    }
+
+    private static void checkSeparate(int lastMatch, String input) {
+        if (lastMatch < input.length() && input.charAt(lastMatch) != ',') {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.valueOf());
+        }
+    }
+
+    private static void checkInvalidInput(int lastMatch, int inputLength) {
+        if (lastMatch < inputLength) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.valueOf());
+        }
     }
 
     private static Matcher createMatcher(String input) {
