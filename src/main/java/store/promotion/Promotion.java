@@ -5,35 +5,35 @@ import java.util.Objects;
 
 public class Promotion {
 
-    private final String name;
-    private final int buy;
-    private final int get;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private final Name name;
+    private final BuyNGetOneFree buyNGetOneFree;
+    private final PromotionTerm promotionTerm;
 
     public Promotion(final String name, final int buy, final int get, final LocalDate startDate,
                      final LocalDate endDate) {
+        this(new Name(name), new BuyNGetOneFree(buy, get), new PromotionTerm(startDate, endDate));
+    }
+
+    public Promotion(final Name name, final BuyNGetOneFree buyNGetOneFree, final PromotionTerm promotionTerm) {
         this.name = name;
-        this.buy = buy;
-        this.get = get;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.buyNGetOneFree = buyNGetOneFree;
+        this.promotionTerm = promotionTerm;
     }
 
     public boolean isActive(LocalDate now) {
-        return now.isAfter(startDate) && now.isBefore(endDate);
+        return promotionTerm.isValid(now);
     }
 
     public int calculateDiscount(int purchaseCount) {
-        return purchaseCount / (buy + get) * get;
+        return buyNGetOneFree.discount(purchaseCount);
     }
 
     public int getTotal() {
-        return buy + get;
+        return buyNGetOneFree.sum();
     }
 
     public String getName() {
-        return name;
+        return name.toString();
     }
 
     @Override
@@ -44,13 +44,12 @@ public class Promotion {
         if (!(object instanceof Promotion promotion)) {
             return false;
         }
-        return buy == promotion.buy && get == promotion.get && Objects.equals(name, promotion.name)
-                && Objects.equals(startDate, promotion.startDate) && Objects.equals(endDate,
-                promotion.endDate);
+        return Objects.equals(name, promotion.name) && Objects.equals(buyNGetOneFree,
+                promotion.buyNGetOneFree) && Objects.equals(promotionTerm, promotion.promotionTerm);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, buy, get, startDate, endDate);
+        return Objects.hash(name, buyNGetOneFree, promotionTerm);
     }
 }

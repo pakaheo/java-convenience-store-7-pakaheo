@@ -1,4 +1,4 @@
-package store;
+package store.order;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

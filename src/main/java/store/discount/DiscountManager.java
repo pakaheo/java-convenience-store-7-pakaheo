@@ -1,6 +1,7 @@
-package store;
+package store.discount;
 
 import java.util.Map;
+import store.product.Product;
 import store.product.Products;
 
 public class DiscountManager {
@@ -12,22 +13,17 @@ public class DiscountManager {
     }
 
     public int calculateTotal(String productName, int purchaseCount) {
-        return products.getOrderedProduct(productName)
-                .mapToInt(product -> product.calculateSubTotal(purchaseCount))
-                .sum();
+        return products.findByName(productName).calculateSubTotal(purchaseCount);
     }
 
     public int calculatePromotionDiscount(String productName, int promotionDeducted) {
-        return products.getOrderedProduct(productName)
+        return products.getOrderedProduct(productName).stream()
                 .mapToInt(product -> product.calculatePromotionDiscount(promotionDeducted))
                 .sum();
     }
 
-    public int calculateMemberShipDiscount(Map<String, Integer> orders) {
+    public int calculateMemberShipDiscount(Map<Product, Integer> orders) {
         return orders.entrySet().stream()
-                .mapToInt(entry -> products.getOrderedProduct(entry.getKey())
-                        .mapToInt(product -> product.calculateMemberShipDiscount(entry.getValue()))
-                        .sum())
-                .sum();
+                .mapToInt(entry -> entry.getKey().calculateMemberShipDiscount(entry.getValue())).sum();
     }
 }

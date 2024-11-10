@@ -1,5 +1,9 @@
-package store;
+package controller;
 
+import store.MemberOptionService;
+import store.discount.DiscountManager;
+import store.order.Order;
+import store.order.OrderDetails;
 import store.product.Products;
 import view.InputView;
 import view.OptionView;
@@ -27,11 +31,9 @@ public class ConvenienceStore {
             output.introduceProducts(products);
             // 구매 상품 및 수량 입력
             OrderDetails orderDetails = input.inputProductAndQuantity(products);
-            Order order = new Order(products, orderDetails, new DiscountManager(products));
+            Order order = new Order(products, orderDetails, new DiscountManager(products), new MemberOptionService());
 
-            int payment = order.progress();
-
-            output.result(payment);
+            order.progress();
         } while (option.morePurchaseOption().equals("Y"));
     }
 }

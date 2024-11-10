@@ -14,7 +14,7 @@ public class OutputView {
     }
 
     protected void introduceMoreProduct(String productName, int count) {
-        System.out.println("현재 " + productName + "은(는)" + count + "개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
+        System.out.println("현재 " + productName + "은(는) " + count + "개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
     }
 
     protected void introduceLackPromotionStock(String productName, int count) {

@@ -1,17 +1,15 @@
 package store.inventory;
 
 import java.util.List;
+import store.PromotionOptionService;
 import store.product.Product;
-import view.InputView;
-import view.OptionView;
-import view.OutputView;
 
 public enum PromotionalInventory implements Inventory {
 
     PROMOTIONAL_INVENTORY;
 
     private List<Product> productGroup;
-    private final OptionView option = new OptionView(new InputView(), new OutputView());
+    private final PromotionOptionService promotionOptionService = new PromotionOptionService();
 
     @Override
     public void stackProducts(List<Product> productGroup) {
@@ -36,13 +34,14 @@ public enum PromotionalInventory implements Inventory {
 
     private int calculateActualDecrease(Product product, String productName, int count) {
         int actualDecrease = product.deduct(count);
-        changeRegularInventory(productName, count - actualDecrease);
+        int nonPromotionCount = count % product.getPromotionEligibleCount();
+        changeRegularInventory(productName, count - actualDecrease, nonPromotionCount);
 
         return actualDecrease;
     }
 
-    private void changeRegularInventory(String productName, int rest) {
-        if (rest > 0 && option.lackPromotionStockOption(productName, rest).equals("Y")) {
+    private void changeRegularInventory(String productName, int rest, int nonPromotionCount) {
+        if (rest > 0 && promotionOptionService.hasParameter(productName, rest + nonPromotionCount)) {
             RegularInventory.REGULAR_INVENTORY.deduct(productName, rest);
         }
     }

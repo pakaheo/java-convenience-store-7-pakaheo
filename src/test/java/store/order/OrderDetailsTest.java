@@ -1,4 +1,4 @@
-package store;
+package store.order;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,15 +28,6 @@ public class OrderDetailsTest {
         orders.put("콜라", 3);
 
         assertThat(new OrderDetails(input, PRODUCTS).getOrders()).isEqualTo(orders);
-    }
-
-    @Test
-    void 존재하지_않는_상품이면_예외() {
-        Products products = new Products(List.of("콜라,1000,10,null"));
-
-        assertThatThrownBy(() -> new OrderDetails("[사이다-5]", PRODUCTS))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf());
     }
 
     @Test

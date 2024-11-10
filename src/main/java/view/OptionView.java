@@ -15,7 +15,7 @@ public class OptionView {
         return input.inputAnswer();
     }
 
-    public String lackPromotionStockOption(String productName, int count) {
+    public String lackPromotionInventoryOption(String productName, int count) {
         output.introduceLackPromotionStock(productName, count);
         return input.inputAnswer();
     }

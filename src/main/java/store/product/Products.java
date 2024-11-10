@@ -1,21 +1,19 @@
 package store.product;
 
+import constants.ErrorMessage;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import store.MoreProductOptionService;
 import store.inventory.PromotionalInventory;
 import store.inventory.RegularInventory;
-import view.InputView;
-import view.OptionView;
-import view.OutputView;
 
 public class Products {
 
     private static final String LINE_CHANGE = "\n";
 
     private final List<Product> productGroup;
-    private OptionView option = new OptionView(new InputView(), new OutputView());
+    private final MoreProductOptionService moreProductOptionService = new MoreProductOptionService();
 
     public Products(List<String> productContents) {
         this.productGroup = ProductParser.parse(productContents);
@@ -28,35 +26,40 @@ public class Products {
     }
 
     public int deductInventory(String productName, int purchaseCount) {
-        // 상품을 구한다
-        Product product = productGroup.stream().filter(pro -> pro.hasName(productName)).toList().getFirst();
-        int canPromotionCount = product.neededCount();
-        if (purchaseCount < canPromotionCount) {
-            if (option.moreProductOption(productName, canPromotionCount - purchaseCount).equals("Y")) {
-                purchaseCount = canPromotionCount;
-            }
+        return PromotionalInventory.PROMOTIONAL_INVENTORY
+                .deduct(productName, purchaseCount);
+    }
+
+    public int optimize(String productName, int purchaseCount) {
+        int promotionCount = availablePromotionCount(productName);
+        int rest = promotionCount - purchaseCount;
+
+        if (rest > 0 && isNeedMoreProduct(productName, rest)) {
+            purchaseCount = promotionCount;
         }
-
-        return PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
+        return purchaseCount;
     }
 
-    public boolean isExceedQuantity(String productName, int purchaseCount) {
-        return calculateActualQuantity(productName, purchaseCount) < purchaseCount;
+    public int availablePromotionCount(String productName) {
+        return findByName(productName).getPromotionEligibleCount();
     }
 
-    private int calculateActualQuantity(String productName, int purchaseCount) {
-        return getOrderedProduct(productName)
-                .mapToInt(product -> product.currentQuantity(purchaseCount))
-                .sum();
+    private boolean isNeedMoreProduct(String productName, int rest) {
+        return moreProductOptionService.hasParameter(productName, rest);
     }
 
-    public Stream<Product> getOrderedProduct(String productName) {
-        return productGroup.stream().filter(product -> product.hasName(productName)).toList().stream();
-    }
-
-    public boolean isPromotionProduct(String productName) {
+    public Product findByName(String productName) {
         return productGroup.stream().filter(product -> product.hasName(productName))
-                .anyMatch(Product::isPromotional);
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf()));
+    }
+
+    public List<Product> getOrderedProduct(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName)).toList();
+    }
+
+    public boolean isPromotionProduct(Product product) {
+        return product.isPromotional();
     }
 
     @Override

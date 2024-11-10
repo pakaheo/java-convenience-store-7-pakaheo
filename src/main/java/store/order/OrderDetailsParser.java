@@ -1,4 +1,4 @@
-package store;
+package store.order;
 
 import constants.ErrorMessage;
 import java.util.HashMap;

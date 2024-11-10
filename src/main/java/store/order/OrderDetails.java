@@ -1,12 +1,8 @@
-package store;
+package store.order;
 
 import constants.ErrorMessage;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
-import store.inventory.PromotionalInventory;
-import store.inventory.RegularInventory;
-import store.product.Product;
 import store.product.Products;
 
 public class OrderDetails {
@@ -21,25 +17,23 @@ public class OrderDetails {
     }
 
     private void validateInput(Map<String, Integer> orders) {
-        for (Entry<String, Integer> entry : orders.entrySet()) {
-            checkExistProduct(entry.getKey());
-            checkQuantity(entry.getKey(), entry.getValue());
-        }
-    }
-
-    public void checkExistProduct(String productName) {
-        Product promotionProduct = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
-        Product regularProduct = RegularInventory.REGULAR_INVENTORY.findByName(productName);
-
-        if (promotionProduct == null && regularProduct == null) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf());
-        }
+        orders.forEach(this::checkQuantity);
     }
 
     public void checkQuantity(String productName, int purchaseCount) {
-        if (products.isExceedQuantity(productName, purchaseCount)) {
+        if (isExceedQuantity(productName, purchaseCount)) {
             throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.valueOf());
         }
+    }
+
+    private boolean isExceedQuantity(String productName, int purchaseCount) {
+        return calculateActualQuantity(productName, purchaseCount) < purchaseCount;
+    }
+
+    private int calculateActualQuantity(String productName, int purchaseCount) {
+        return products.getOrderedProduct(productName).stream()
+                .mapToInt(product -> product.compareQuantity(purchaseCount))
+                .sum();
     }
 
     public Map<String, Integer> getOrders() {

@@ -1,76 +1,58 @@
 package store.product;
 
 import camp.nextstep.edu.missionutils.DateTimes;
-import java.text.DecimalFormat;
 import java.util.Objects;
-import store.MemberShip;
+import store.discount.MemberShip;
 import store.promotion.Promotion;
 
 public class Product {
 
     private static final String DASH = "-";
     private static final String SPACE = " ";
-    private static final DecimalFormat PRICE_FORMAT = new DecimalFormat("#,###");
-    private static final String NO_QUANTITY = "재고 없음";
     private static final String PRICE_UNIT = "원";
-    private static final String QUANTITY_UNIT = "개";
     private static final String NO_WORD = "";
 
-    private final String name;
-    private final int price;
-    private int quantity;
+    private final Name name;
+    private final Price price;
+    private Quantity quantity;
     private final Promotion promotion;
 
     public Product(final String name, final int price, int quantity, final Promotion promotion) {
+        this(new Name(name), new Price(price), new Quantity(quantity), promotion);
+    }
+
+    public Product(final Name name, final Price price, Quantity quantity, final Promotion promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.promotion = promotion;
     }
 
-    private String currentQuantity() {
-        if (quantity == 0) {
-            return NO_QUANTITY;
-        }
-        return quantity + QUANTITY_UNIT;
-    }
-
-    private String currentPromotion() {
-        if (promotion == null) {
-            return NO_WORD;
-        }
-        return SPACE + promotion.getName();
-    }
-
-    private String formalize(int price) {
-        return PRICE_FORMAT.format(price);
+    public int compareQuantity(int purchaseCount) {
+        return quantity.calculateMinimum(purchaseCount);
     }
 
     public boolean hasName(String productName) {
-        return name.equals(productName);
+        return name.match(productName);
     }
 
     public int calculateSubTotal(int purchaseCount) {
-        return price * purchaseCount;
+        return price.multiply(purchaseCount);
     }
 
     public boolean isPromotional() {
         return promotion != null && promotion.isActive(DateTimes.now().toLocalDate());
     }
 
-    public int currentQuantity(int purchaseCount) {
-        return Math.min(this.quantity, purchaseCount);
-    }
-
     public int deduct(int count) {
-        int decrease = Math.min(quantity, count);
-        quantity -= decrease;
+        int decrease = quantity.calculateMinimum(count);
+        quantity = quantity.reduce(decrease);
         return decrease;
     }
 
     public int calculatePromotionDiscount(int purchaseCount) {
         if (isPromotional()) {
-            return price * promotion.calculateDiscount(purchaseCount);
+            return price.multiply(promotion.calculateDiscount(purchaseCount));
         }
         return 0;
     }
@@ -82,11 +64,15 @@ public class Product {
         return 0;
     }
 
-    public int neededCount() {
+    public int getPromotionEligibleCount() {
         if (promotion == null) {
             return 0;
         }
         return promotion.getTotal();
+    }
+
+    public int getPrice() {
+        return price.getNumber();
     }
 
     @Override
@@ -97,8 +83,9 @@ public class Product {
         if (!(object instanceof Product product)) {
             return false;
         }
-        return price == product.price && quantity == product.quantity && Objects.equals(name, product.name)
-                && Objects.equals(promotion, product.promotion);
+        return Objects.equals(name, product.name) && Objects.equals(price, product.price)
+                && Objects.equals(quantity, product.quantity) && Objects.equals(promotion,
+                product.promotion);
     }
 
     @Override
@@ -108,7 +95,14 @@ public class Product {
 
     @Override
     public String toString() {
-        return DASH + SPACE + name + SPACE + formalize(price) + PRICE_UNIT + SPACE + currentQuantity()
-                + currentPromotion();
+        return DASH + SPACE + name.toString() + SPACE + price.formalize() + PRICE_UNIT + SPACE + quantity.display()
+                + displayPromotion();
+    }
+
+    private String displayPromotion() {
+        if (promotion == null) {
+            return NO_WORD;
+        }
+        return SPACE + promotion.getName();
     }
 }
