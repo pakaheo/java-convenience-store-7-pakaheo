@@ -1,4 +1,4 @@
-package store;
+package store.option;
 
 import view.InputView;
 import view.OptionView;

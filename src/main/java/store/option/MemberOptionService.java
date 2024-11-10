@@ -1,4 +1,4 @@
-package store;
+package store.option;
 
 public class MemberOptionService implements OptionProvider {
 

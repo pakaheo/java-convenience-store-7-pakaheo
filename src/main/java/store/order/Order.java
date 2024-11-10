@@ -3,9 +3,8 @@ package store.order;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import store.MemberOptionService;
-import store.Receipt;
 import store.discount.DiscountManager;
+import store.option.MemberOptionService;
 import store.product.Product;
 import store.product.Products;
 
@@ -43,6 +42,7 @@ public class Order {
         int promotionDecrease = getPromotionDecrease(productName, purchaseCount);
         saveMembershipProduct(membershipProduct, productName, purchaseCount);
         receipt.addItem(productName, purchaseCount, products.findByName(productName).getPrice());
+
         return calculatePayment(productName, purchaseCount, promotionDecrease);
     }
 

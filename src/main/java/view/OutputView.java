@@ -1,7 +1,7 @@
 package view;
 
 import java.text.DecimalFormat;
-import store.Receipt;
+import store.order.Receipt;
 import store.product.Products;
 
 public class OutputView {

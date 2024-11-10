@@ -1,4 +1,4 @@
-package store;
+package store.order;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
