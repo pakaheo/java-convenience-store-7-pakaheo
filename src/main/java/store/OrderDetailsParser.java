@@ -20,22 +20,14 @@ public class OrderDetailsParser {
         while (canFind(matcher)) {
             orders.put(getProductName(matcher), getPurchaseCount(matcher));
             lastMatch = matcher.end();
-            checkSeparate(lastMatch, input);
         }
-
         checkInvalidInput(lastMatch, input.length());
 
         return orders;
     }
 
-    private static void checkSeparate(int lastMatch, String input) {
-        if (lastMatch < input.length() && input.charAt(lastMatch) != ',') {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.valueOf());
-        }
-    }
-
     private static void checkInvalidInput(int lastMatch, int inputLength) {
-        if (lastMatch < inputLength) {
+        if (lastMatch != inputLength) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.valueOf());
         }
     }
