@@ -28,6 +28,10 @@ public class Promotion {
         return purchaseCount / (buy + get) * get;
     }
 
+    public int getTotal() {
+        return buy + get;
+    }
+
     public String getName() {
         return name;
     }

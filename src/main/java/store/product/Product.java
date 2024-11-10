@@ -82,6 +82,13 @@ public class Product {
         return 0;
     }
 
+    public int neededCount() {
+        if (promotion == null) {
+            return 0;
+        }
+        return promotion.getTotal();
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {

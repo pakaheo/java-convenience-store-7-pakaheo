@@ -28,7 +28,7 @@ public class OrderDetailsParser {
 
     private static void checkInvalidInput(int lastMatch, int inputLength) {
         if (lastMatch != inputLength) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.valueOf());
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
         }
     }
 

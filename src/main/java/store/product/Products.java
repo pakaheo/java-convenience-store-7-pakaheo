@@ -1,17 +1,21 @@
 package store.product;
 
-import constants.ErrorMessage;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import store.inventory.PromotionalInventory;
 import store.inventory.RegularInventory;
+import view.InputView;
+import view.OptionView;
+import view.OutputView;
 
 public class Products {
 
     private static final String LINE_CHANGE = "\n";
 
     private final List<Product> productGroup;
+    private OptionView option = new OptionView(new InputView(), new OutputView());
 
     public Products(List<String> productContents) {
         this.productGroup = ProductParser.parse(productContents);
@@ -24,40 +28,35 @@ public class Products {
     }
 
     public int deductInventory(String productName, int purchaseCount) {
-        checkExistProduct(productName);
-        checkQuantity(productName, purchaseCount);
+        // 상품을 구한다
+        Product product = productGroup.stream().filter(pro -> pro.hasName(productName)).toList().getFirst();
+        int canPromotionCount = product.neededCount();
+        if (purchaseCount < canPromotionCount) {
+            if (option.moreProductOption(productName, canPromotionCount - purchaseCount).equals("Y")) {
+                purchaseCount = canPromotionCount;
+            }
+        }
 
         return PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
     }
 
-    public void checkExistProduct(String productName) {
-        Product promotionProduct = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
-        Product regularProduct = RegularInventory.REGULAR_INVENTORY.findByName(productName);
-
-        if (promotionProduct == null && regularProduct == null) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_EXISTS_PRODUCT.valueOf());
-        }
-    }
-
-    public void checkQuantity(String productName, int purchaseCount) {
-        if (isExceedQuantity(productName, purchaseCount)) {
-            throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.valueOf());
-        }
-    }
-
-    private boolean isExceedQuantity(String productName, int purchaseCount) {
+    public boolean isExceedQuantity(String productName, int purchaseCount) {
         return calculateActualQuantity(productName, purchaseCount) < purchaseCount;
     }
 
     private int calculateActualQuantity(String productName, int purchaseCount) {
-        return productGroup.stream()
-                .filter(product -> product.hasName(productName))
+        return getOrderedProduct(productName)
                 .mapToInt(product -> product.currentQuantity(purchaseCount))
                 .sum();
     }
 
-    public List<Product> getOrderedProduct(String productName) {
-        return productGroup.stream().filter(product -> product.hasName(productName)).toList();
+    public Stream<Product> getOrderedProduct(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName)).toList().stream();
+    }
+
+    public boolean isPromotionProduct(String productName) {
+        return productGroup.stream().filter(product -> product.hasName(productName))
+                .anyMatch(Product::isPromotional);
     }
 
     @Override

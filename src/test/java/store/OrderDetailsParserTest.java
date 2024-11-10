@@ -21,6 +21,6 @@ public class OrderDetailsParserTest {
 
         assertThatThrownBy(() -> OrderDetailsParser.parse(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ErrorMessage.INVALID_INPUT.valueOf());
+                .hasMessage(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
     }
 }

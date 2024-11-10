@@ -1,5 +1,6 @@
 package view;
 
+import java.text.DecimalFormat;
 import store.Receipt;
 import store.product.Products;
 
@@ -30,5 +31,9 @@ public class OutputView {
 
     protected void introduceMorePurchase() {
         System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
+    }
+
+    public void result(int payment) {
+        System.out.println("내실돈" + new DecimalFormat("#,###").format(payment));
     }
 }
