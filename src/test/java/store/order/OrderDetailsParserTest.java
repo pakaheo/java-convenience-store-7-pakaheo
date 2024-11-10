@@ -10,14 +10,14 @@ public class OrderDetailsParserTest {
 
     @Test
     void 주문내역_생성() {
-        String input = "[콜라-3],[사이다-4]";
+        String input = "[콜라-3],[사이다-5]";
 
         assertThat(OrderDetailsParser.parse(input)).hasSize(2);
     }
 
     @Test
     void 잘못된_주문내역_입력() {
-        String input = "[콜라3],[사이다-4)";
+        String input = "[콜라-3][사이다-4]";
 
         assertThatThrownBy(() -> OrderDetailsParser.parse(input))
                 .isInstanceOf(IllegalArgumentException.class)

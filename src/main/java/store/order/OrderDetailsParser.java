@@ -20,6 +20,9 @@ public class OrderDetailsParser {
         while (canFind(matcher)) {
             orders.put(getProductName(matcher), getPurchaseCount(matcher));
             lastMatch = matcher.end();
+            if (lastMatch < input.length() && input.charAt(lastMatch) != ',') {
+                throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+            }
         }
         checkInvalidInput(lastMatch, input.length());
 
