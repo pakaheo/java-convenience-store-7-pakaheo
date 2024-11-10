@@ -1,7 +1,6 @@
 package store;
 
 import java.util.Map;
-import store.product.Product;
 import store.product.Products;
 
 public class DiscountManager {
@@ -13,12 +12,9 @@ public class DiscountManager {
     }
 
     public int calculateTotal(String productName, int purchaseCount) {
-        Product wow = products.getOrderedProduct(productName)
-                .filter(product -> product.hasName(productName))
-                .findFirst()
-                .orElse(null);
-
-        return wow.calculateSubTotal(purchaseCount);
+        return products.getOrderedProduct(productName)
+                .mapToInt(product -> product.calculateSubTotal(purchaseCount))
+                .sum();
     }
 
     public int calculatePromotionDiscount(String productName, int promotionDeducted) {
