@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import store.discount.DiscountManager;
-import store.option.MemberOptionService;
+import store.option.MembershipOptionService;
 import store.product.Product;
 import store.product.Products;
 
@@ -13,11 +13,11 @@ public class Order {
     private final Products products;
     private final Map<String, Integer> orders;
     private final DiscountManager discountManager;
-    private final MemberOptionService memberOptionService;
+    private final MembershipOptionService memberOptionService;
     private final Receipt receipt = new Receipt();
 
     public Order(final Products products, final OrderDetails orderDetails, DiscountManager discountManager,
-                 MemberOptionService memberOptionService) {
+                 MembershipOptionService memberOptionService) {
         this.products = products;
         this.orders = orderDetails.getOrders();
         this.discountManager = discountManager;
@@ -31,8 +31,7 @@ public class Order {
         for (Entry<String, Integer> entry : orders.entrySet()) {
             payment += purchaseProduct(entry.getKey(), entry.getValue(), membershipProduct);
         }
-
-        payment = applyMemberShip(payment, membershipProduct);
+        applyMemberShip(payment, membershipProduct);
 
         receipt.print();
     }
@@ -46,13 +45,11 @@ public class Order {
         return calculatePayment(productName, purchaseCount, promotionDecrease);
     }
 
-    private int applyMemberShip(int payment, Map<Product, Integer> membershipProduct) {
-        if (memberOptionService.noParameter()) {
+    private void applyMemberShip(int payment, Map<Product, Integer> membershipProduct) {
+        if (memberOptionService.meet()) {
             int discount = discountManager.calculateMemberShipDiscount(membershipProduct);
             receipt.applyMembershipDiscount(discount);
-            return payment - discount;
         }
-        return payment;
     }
 
     private void saveMembershipProduct(Map<Product, Integer> membershipProduct, String productName, int purchaseCount) {
