@@ -33,16 +33,30 @@ public class Receipt {
 
     public void print() {
         System.out.println("============== W 편의점 ================");
-        System.out.println("상품명\t수량\t금액");
-        purchaseItems.forEach(System.out::println);
+        System.out.printf("%-15s %-10s %-10s\n", "상품명", "수량", "금액");
+        for (String item : purchaseItems) {
+            String[] parts = item.split("\t");
+            String name = parts[0];
+            int quantity = Integer.parseInt(parts[1]);
+            int price = Integer.parseInt(parts[2]);
+            System.out.printf("%-15s %-10d %-10s\n", name, quantity, PRICE_FORMAT.format(price));
+        }
 
         System.out.println("============= 증정 ==============");
-        freeItems.forEach(System.out::println);
+
+        // 증정 항목 출력
+        for (String item : freeItems) {
+            String[] parts = item.split("\t");
+            String name = parts[0];
+            int quantity = Integer.parseInt(parts[1]);
+            System.out.printf("%-15s %-10d\n", name, quantity);
+        }
 
         System.out.println("====================================");
-        System.out.println("총구매액\t\t" + PRICE_FORMAT.format(totalAmount));
-        System.out.println("행사할인\t\t-" + PRICE_FORMAT.format(promotionDiscount));
-        System.out.println("멤버십할인\t-" + PRICE_FORMAT.format(membershipDiscount));
-        System.out.println("내실돈\t\t" + PRICE_FORMAT.format((totalAmount - promotionDiscount - membershipDiscount)));
+        System.out.printf("%-15s %-10s\n", "총구매액", PRICE_FORMAT.format(totalAmount));
+        System.out.printf("%-15s %-10s\n", "행사할인", "-" + PRICE_FORMAT.format(promotionDiscount));
+        System.out.printf("%-15s %-10s\n", "멤버십할인", "-" + PRICE_FORMAT.format(membershipDiscount));
+        System.out.printf("%-15s %-10s\n", "내실돈",
+                PRICE_FORMAT.format((totalAmount - promotionDiscount - membershipDiscount)));
     }
 }
