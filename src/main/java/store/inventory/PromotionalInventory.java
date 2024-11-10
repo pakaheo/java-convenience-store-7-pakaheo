@@ -13,7 +13,7 @@ public enum PromotionalInventory implements Inventory {
 
     @Override
     public void stackProducts(List<Product> productGroup) {
-        this.productGroup = productGroup.stream().filter(Product::isPromotional).toList();
+        this.productGroup = productGroup.stream().filter(product -> product.isPromotional()).toList();
     }
 
     @Override
