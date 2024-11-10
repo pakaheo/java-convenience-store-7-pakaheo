@@ -9,7 +9,7 @@ public interface OptionProvider {
     String YES = "Y";
     OptionView optionView = new OptionView(new InputView(), new OutputView());
 
-    boolean noParameter();
+    boolean meet();
 
-    boolean hasParameter(String productName, int rest);
+    boolean meet(String productName, int rest);
 }

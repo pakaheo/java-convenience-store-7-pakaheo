@@ -45,7 +45,7 @@ public class Products {
     }
 
     private boolean isNeedMoreProduct(String productName, int rest) {
-        return moreProductOptionService.hasParameter(productName, rest);
+        return moreProductOptionService.meet(productName, rest);
     }
 
     public Product findByName(String productName) {

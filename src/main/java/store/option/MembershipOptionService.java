@@ -1,14 +1,14 @@
 package store.option;
 
-public class MemberOptionService implements OptionProvider {
+public class MembershipOptionService implements OptionProvider {
 
     @Override
-    public boolean noParameter() {
+    public boolean meet() {
         return optionView.membershipOption().equals(YES);
     }
 
     @Override
-    public boolean hasParameter(String productName, int rest) {
+    public boolean meet(String productName, int rest) {
         return false;
     }
 }

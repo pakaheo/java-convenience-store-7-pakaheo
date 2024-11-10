@@ -13,7 +13,7 @@ public enum PromotionalInventory implements Inventory {
 
     @Override
     public void stackProducts(List<Product> productGroup) {
-        this.productGroup = productGroup.stream().filter(product -> product.isPromotional()).toList();
+        this.productGroup = productGroup.stream().filter(Product::isPromotional).toList();
     }
 
     @Override
@@ -41,7 +41,7 @@ public enum PromotionalInventory implements Inventory {
     }
 
     private void changeRegularInventory(String productName, int remainingCount, int nonPromotionCount) {
-        if (remainingCount > 0 && promotionOptionService.hasParameter(productName, remainingCount)) {
+        if (remainingCount > 0 && promotionOptionService.meet(productName, remainingCount)) {
             RegularInventory.REGULAR_INVENTORY.deduct(productName, remainingCount - nonPromotionCount);
         }
     }

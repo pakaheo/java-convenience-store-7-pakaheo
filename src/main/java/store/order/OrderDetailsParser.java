@@ -11,22 +11,32 @@ public class OrderDetailsParser {
     private static final Pattern PATTERN = Pattern.compile("\\[([가-힣]+)-(\\d+)]");
     private static final int PRODUCT_NAME_PLACE = 1;
     private static final int PURCHASE_COUNT_PLACE = 2;
+    private static final Character SEPARATOR = ',';
 
     public static Map<String, Integer> parse(String input) {
         Map<String, Integer> orders = new HashMap<>();
-        Matcher matcher = createMatcher(input);
-        int lastMatch = 0;
 
+        int lastMatch = addOrders(orders, input);
+        checkInvalidInput(lastMatch, input.length());
+        
+        return orders;
+    }
+
+    private static int addOrders(Map<String, Integer> orders, String input) {
+        int lastMatch = 0;
+        Matcher matcher = createMatcher(input);
         while (canFind(matcher)) {
             orders.put(getProductName(matcher), getPurchaseCount(matcher));
             lastMatch = matcher.end();
-            if (lastMatch < input.length() && input.charAt(lastMatch) != ',') {
-                throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
-            }
+            checkSeparate(lastMatch, input);
         }
-        checkInvalidInput(lastMatch, input.length());
+        return lastMatch;
+    }
 
-        return orders;
+    private static void checkSeparate(int lastMatch, String input) {
+        if (lastMatch < input.length() && input.charAt(lastMatch) != SEPARATOR) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+        }
     }
 
     private static void checkInvalidInput(int lastMatch, int inputLength) {
