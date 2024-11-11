@@ -41,8 +41,8 @@ public enum PromotionalInventory implements Inventory {
     }
 
     private void handleRegularInventory(Product product, int remainingCount, int nonPromotionCount) {
-        if (remainingCount > 0 && promotionOptionService.meet(product.getName(), remainingCount)) {
-            RegularInventory.REGULAR_INVENTORY.deduct(product.getName(), remainingCount - nonPromotionCount);
+        if (remainingCount > 0 && promotionOptionService.meet(product.getName(), remainingCount + nonPromotionCount)) {
+            RegularInventory.REGULAR_INVENTORY.deduct(product.getName(), remainingCount);
         }
     }
 }
