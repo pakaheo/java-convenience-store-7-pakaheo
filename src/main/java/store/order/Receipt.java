@@ -1,11 +1,11 @@
 package store.order;
 
-import constants.receipt.ReceiptFormat;
-import constants.receipt.ReceiptHeader;
-import constants.receipt.ReceiptItems;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import store.order.constants.ReceiptFormat;
+import store.order.constants.ReceiptHeader;
+import store.order.constants.ReceiptItems;
 
 public class Receipt {
 

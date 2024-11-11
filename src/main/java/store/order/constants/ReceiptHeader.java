@@ -1,4 +1,4 @@
-package constants.receipt;
+package store.order.constants;
 
 public enum ReceiptHeader {
 
