@@ -1,4 +1,4 @@
-package constants;
+package constants.receipt;
 
 public enum ReceiptItems {
 
