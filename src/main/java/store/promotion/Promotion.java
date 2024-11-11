@@ -24,16 +24,16 @@ public class Promotion {
         return promotionTerm.isValid(now);
     }
 
-    public int freeGet(int purchaseCount) {
-        return buyNGetOneFree.freeCount(purchaseCount);
+    public int freeGet() {
+        return buyNGetOneFree.freeCount();
+    }
+
+    public int getTotal() {
+        return buyNGetOneFree.sum();
     }
 
     public String getName() {
         return name.toString();
-    }
-
-    public int getRequired() {
-        return buyNGetOneFree.getBuy();
     }
 
     @Override

@@ -53,11 +53,11 @@ public class Product {
         return decrease;
     }
 
-    public int calculateFreeCount(int purchaseCount) {
+    public int calculateFreeCount() {
         if (promotion == null) {
             return 0;
         }
-        return promotion.freeGet(purchaseCount);
+        return promotion.freeGet();
     }
 
     public String getName() {
@@ -69,7 +69,7 @@ public class Product {
     }
 
     public int getRequiredPromotion() {
-        return promotion.getRequired();
+        return promotion.getTotal();
     }
 
     @Override

@@ -17,7 +17,7 @@ public class BuyNGetOneFreeTest {
     void 상품_무료_증정_개수_계산() {
         BuyNGetOneFree twoPlusOne = new BuyNGetOneFree(2, 1);
 
-        assertThat(twoPlusOne.freeCount(10)).isEqualTo(3);
+        assertThat(twoPlusOne.freeCount()).isEqualTo(3);
     }
 
     @Test

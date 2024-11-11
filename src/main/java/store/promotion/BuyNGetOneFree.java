@@ -12,8 +12,8 @@ public class BuyNGetOneFree {
         this.get = get;
     }
 
-    public int freeCount(int purchaseCount) {
-        return purchaseCount / buy * get;
+    public int freeCount() {
+        return get;
     }
 
     public int sum() {

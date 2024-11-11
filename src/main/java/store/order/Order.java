@@ -42,15 +42,26 @@ public class Order {
             String productName = entry.getKey();
             int purchaseCount = entry.getValue();
 
+            // 일반 재고일 때
+            if (PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName) == null) {
+                return freeProducts;
+            }
+
             int promotionDiscount = PromotionalInventory.PROMOTIONAL_INVENTORY.calculatePromotionDiscount(productName,
                     purchaseCount);
 
             Product product = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
-            if (purchaseCount < promotionDiscount && moreProductOptionService.meet(productName,
-                    product.calculateFreeCount(purchaseCount) - purchaseCount)) {
-                purchaseCount = product.calculateFreeCount(purchaseCount);
+            int requiredForPromotion = product.getRequiredPromotion();
+
+            if (purchaseCount < requiredForPromotion) {
+                int additionalCount = requiredForPromotion - purchaseCount;
+                if (moreProductOptionService.meet(productName, additionalCount)) {
+                    purchaseCount = requiredForPromotion;
+                    orders.put(productName, purchaseCount);
+                }
             }
-            addFreeProducts(purchaseCount, productName, freeProducts);
+
+            addFreeProducts(promotionDiscount, productName, freeProducts);
         }
         return freeProducts;
     }

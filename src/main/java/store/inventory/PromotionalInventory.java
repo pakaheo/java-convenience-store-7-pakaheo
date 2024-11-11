@@ -33,7 +33,7 @@ public enum PromotionalInventory implements Inventory {
             return 0;
         }
 
-        int freeCount = product.calculateFreeCount(purchaseCount);
+        int freeCount = product.calculateFreeCount();
         return freeCount * product.getPrice();
     }
 
