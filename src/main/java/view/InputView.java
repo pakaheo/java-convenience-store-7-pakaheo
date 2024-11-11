@@ -10,7 +10,6 @@ public class InputView {
 
     private static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
     private static final String PROMOTIONS_FILE_PATH = "src/main/resources/promotions.md";
-    private static final String NOT_FOUND_FILE = "파일을 읽어들일 수 없습니다.";
     private static final String YES = "Y";
     private static final String NO = "N";
 
