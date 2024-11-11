@@ -36,7 +36,7 @@ public class ConvenienceStore {
             Order order = new Order(orderDetails, products, new DiscountManager(products),
                     new MoreProductOptionService());
             Receipt receipt = order.progress(membershipOptionService.meet());
-            receipt.print();
+            output.showReceipt(receipt);
         } while (morePurchaseOptionService.meet());
     }
 }

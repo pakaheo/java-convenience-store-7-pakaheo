@@ -29,6 +29,6 @@ public class OutputView {
     }
 
     public void showReceipt(Receipt receipt) {
-        System.out.println(receipt);
+        receipt.print();
     }
 }
