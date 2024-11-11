@@ -7,6 +7,22 @@ import java.util.List;
 public class Receipt {
 
     private static final DecimalFormat PRICE_FORMAT = new DecimalFormat("#,###");
+    private static final String TAB = "\t";
+    private static final String LINE_CHANGE = "\n";
+    private static final String STORE_HEADER = "============== W 편의점 ================";
+    private static final String PURCHASE_HISTORY_FORMAT = "%-15s %-10s %-10s";
+    private static final String PRODUCT_NAME = "상품명";
+    private static final String QUANTITY = "수량";
+    private static final String SUB_TOTAL = "금액";
+    private static final String PROMOTION_HEADER = "============== 증   정 ================";
+    private static final String PROMOTION_HISTORY_FORMAT = "%-15s %-10d";
+    private static final String FINAL_PAYMENT_HEADER = "====================================";
+    private static final String FINAL_PAYMENT_FORMAT = "%-15s %-10s";
+    private static final String TOTAL = "총구매액";
+    private static final String PROMOTION_DISCOUNT = "행사할인";
+    private static final String MEMBERSHIP_DISCOUNT = "멤버십할인";
+    private static final String MONEY_TO_PAY = "내실돈";
+    private static final String MINUS = "-";
 
     private final List<String> purchaseItems = new ArrayList<>();
     private final List<String> freeItems = new ArrayList<>();
@@ -15,12 +31,12 @@ public class Receipt {
     private int membershipDiscount;
 
     public void addItem(String name, int quantity, int price) {
-        purchaseItems.add(name + "\t" + quantity + "\t" + price);
+        purchaseItems.add(name + TAB + quantity + TAB + price);
         totalAmount += price * quantity;
     }
 
     public void addFreeItem(String name, int quantity) {
-        freeItems.add(name + "\t" + quantity);
+        freeItems.add(name + TAB + quantity);
     }
 
     public void applyPromotionDiscount(int discount) {
@@ -35,46 +51,60 @@ public class Receipt {
         welcome();
         purchaseHistory();
         promotionHistory();
-        discountHistory();
         finalPayment();
     }
 
     private void welcome() {
-        System.out.println("============== W 편의점 ================");
+        System.out.println(STORE_HEADER);
     }
 
     private void purchaseHistory() {
-        System.out.printf("%-15s %-10s %-10s\n", "상품명", "수량", "금액");
+        System.out.printf(PURCHASE_HISTORY_FORMAT + LINE_CHANGE, PRODUCT_NAME, QUANTITY, SUB_TOTAL);
+        
         for (String item : purchaseItems) {
-            String[] parts = item.split("\t");
-            String name = parts[0];
-            int quantity = Integer.parseInt(parts[1]);
-            int price = Integer.parseInt(parts[2]);
-            System.out.printf("%-15s %-10d %-10s\n", name, quantity, PRICE_FORMAT.format((long) price * quantity));
+            String[] parts = item.split(TAB);
+            System.out.printf(PURCHASE_HISTORY_FORMAT + LINE_CHANGE, parts[0], toInt(parts[1]),
+                    PRICE_FORMAT.format((long) toInt(parts[2]) * toInt(parts[1])));
         }
     }
 
     private void promotionHistory() {
-        System.out.println("============= 증정 ==============");
+        System.out.println(PROMOTION_HEADER);
 
         for (String item : freeItems) {
-            String[] parts = item.split("\t");
-            String name = parts[0];
-            int quantity = Integer.parseInt(parts[1]);
-            System.out.printf("%-15s %-10d\n", name, quantity);
+            String[] parts = item.split(TAB);
+            System.out.printf(PROMOTION_HISTORY_FORMAT + LINE_CHANGE, parts[0], toInt(parts[1]));
         }
     }
 
-    private void discountHistory() {
-        System.out.println("====================================");
-        System.out.printf("%-15s %-10s\n", "총구매액", PRICE_FORMAT.format(totalAmount));
-        System.out.printf("%-15s %-10s\n", "행사할인", "-" + PRICE_FORMAT.format(promotionDiscount));
-        System.out.printf("%-15s %-10s\n", "멤버십할인", "-" + PRICE_FORMAT.format(membershipDiscount));
+    private int toInt(String text) {
+        return Integer.parseInt(text);
     }
 
     private void finalPayment() {
-        System.out.printf("%-15s %-10s\n", "내실돈",
-                PRICE_FORMAT.format((totalAmount - promotionDiscount - membershipDiscount)));
+        System.out.println(FINAL_PAYMENT_HEADER);
+        finalTotal();
+        finalPromotionDiscount();
+        finalMembershipDiscount();
+        finalMoneyToPay();
+    }
 
+    private void finalTotal() {
+        System.out.printf(FINAL_PAYMENT_FORMAT + LINE_CHANGE, TOTAL, PRICE_FORMAT.format(totalAmount));
+    }
+
+    private void finalPromotionDiscount() {
+        System.out.printf(FINAL_PAYMENT_FORMAT + LINE_CHANGE, PROMOTION_DISCOUNT,
+                MINUS + PRICE_FORMAT.format(promotionDiscount));
+    }
+
+    private void finalMembershipDiscount() {
+        System.out.printf(FINAL_PAYMENT_FORMAT + LINE_CHANGE, MEMBERSHIP_DISCOUNT,
+                MINUS + PRICE_FORMAT.format(membershipDiscount));
+    }
+
+    private void finalMoneyToPay() {
+        System.out.printf(FINAL_PAYMENT_FORMAT + LINE_CHANGE, MONEY_TO_PAY,
+                PRICE_FORMAT.format((totalAmount - promotionDiscount - membershipDiscount)));
     }
 }
