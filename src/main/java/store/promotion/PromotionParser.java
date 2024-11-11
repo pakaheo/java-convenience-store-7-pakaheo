@@ -11,8 +11,7 @@ public class PromotionParser {
 
     private static final String SEPARATE = ",";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    private static final Map<String, Promotion> promotions = new HashMap<>();
+    private static final Map<String, Promotion> PROMOTIONS = new HashMap<>();
 
     public static List<Promotion> parse(List<String> promotionContents) {
         List<Promotion> promotionGroup = new ArrayList<>();
@@ -22,13 +21,13 @@ public class PromotionParser {
             Promotion promotion = new Promotion(splitted[0], toInt(splitted[1]), toInt(splitted[2]),
                     toDate(splitted[3]), toDate(splitted[4]));
             promotionGroup.add(promotion);
-            promotions.put(splitted[0], promotion);
+            PROMOTIONS.put(splitted[0], promotion);
         }
         return promotionGroup;
     }
 
     public static Promotion getPromotion(String name) {
-        return promotions.get(name);
+        return PROMOTIONS.get(name);
     }
 
     private static String[] splitBySeparate(String content) {
