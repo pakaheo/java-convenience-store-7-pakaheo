@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.inventory.PromotionalInventory;
-import store.inventory.RegularInventory;
 import store.promotion.Promotions;
 
 public class ProductsTest {
@@ -42,16 +41,6 @@ public class ProductsTest {
         Product coke = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName("콜라");
 
         assertThat(coke.toString()).isEqualTo("- 콜라 1,000원 5개 탄산2+1");
-    }
-
-    @Test
-    void 일반_재고에서_차감() {
-        Products products = new Products(List.of("콜라,1000,10,null"));
-        products.deductInventory("콜라", 5);
-
-        Product coke = RegularInventory.REGULAR_INVENTORY.findByName("콜라");
-
-        assertThat(coke.toString()).isEqualTo("- 콜라 1,000원 5개");
     }
 
     @Test

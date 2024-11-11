@@ -30,27 +30,6 @@ public class Products {
                 .deduct(productName, purchaseCount);
     }
 
-//    public int calculateOptimizedCount(String productName, int purchaseCount) {
-//        int promotionCount = availablePromotionCount(productName);
-//        return adjustForPromotion(productName, purchaseCount, promotionCount);
-//    }
-
-    private int adjustForPromotion(String productName, int purchaseCount, int promotionCount) {
-        int remainingPromotion = promotionCount - purchaseCount;
-        if (remainingPromotion > 0 && requiresMoreProducts(productName, remainingPromotion)) {
-            return promotionCount;
-        }
-        return purchaseCount;
-    }
-
-//    public int availablePromotionCount(String productName) {
-//        return findByName(productName).getPromotionEligibleCount();
-//    }
-
-    private boolean requiresMoreProducts(String productName, int rest) {
-        return moreProductOptionService.meet(productName, rest);
-    }
-
     public Product findByName(String productName) {
         return productGroup.stream().filter(product -> product.hasName(productName))
                 .findFirst()

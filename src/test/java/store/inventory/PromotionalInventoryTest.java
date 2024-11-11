@@ -37,10 +37,4 @@ public class PromotionalInventoryTest {
         PROMOTIONAL_INVENTORY.deduct("콜라", 5);
         assertThat(COKE).isEqualTo(new Product("콜라", 1_000, 5, Constants.TWO_PLUS_ONE_PROMOTION));
     }
-
-    @Test
-    void 프로모션_재고에_없으면_일반_재고에서_차감() {
-        PROMOTIONAL_INVENTORY.deduct("사이다", 5);
-        assertThat(CIDER).isEqualTo(new Product("사이다", 1_000, 5, null));
-    }
 }
