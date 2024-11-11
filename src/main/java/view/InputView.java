@@ -19,9 +19,8 @@ public class InputView {
     private static final String YES = "Y";
     private static final String NO = "N";
 
-    public Products inputProducts() {
+    public List<String> inputProductsFromFile() {
         List<String> productContents = new ArrayList<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(PRODUCTS_FILE_PATH))) {
             String productContent;
             reader.readLine();
@@ -31,11 +30,14 @@ public class InputView {
         } catch (IOException ioException) {
             throw new IllegalArgumentException(NOT_FOUND_FILE);
         }
+        return productContents;
+    }
 
+    public Products inputProductsFromList(List<String> productContents) {
         return new Products(productContents);
     }
 
-    public Promotions inputPromotions() {
+    public List<String> inputPromotionsFromFile() {
         List<String> promotionContents = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(PROMOTIONS_FILE_PATH))) {
@@ -48,6 +50,10 @@ public class InputView {
             throw new IllegalArgumentException(NOT_FOUND_FILE);
         }
 
+        return promotionContents;
+    }
+
+    public Promotions inputPromotionsFromList(List<String> promotionContents) {
         return new Promotions(promotionContents);
     }
 

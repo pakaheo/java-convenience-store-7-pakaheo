@@ -12,7 +12,9 @@ public class OrderTest {
 
     private static final OrderDetails MEANINGLESS_ORDER_DETAILS = new OrderDetails("[콜라-5]",
             new Products(List.of("콜라,1000,10,null")));
-    private static final OptionView OPTION = new OptionView(new InputView(), new OutputView());
+
+    private static final OptionView OPTION = new OptionView(new InputView(),
+            new OutputView());
 
     @BeforeEach
     void set_up() {
