@@ -28,12 +28,12 @@ public class Promotion {
         return buyNGetOneFree.freeCount(purchaseCount);
     }
 
-    public int getTotal() {
-        return buyNGetOneFree.sum();
-    }
-
     public String getName() {
         return name.toString();
+    }
+
+    public int getRequired() {
+        return buyNGetOneFree.getBuy();
     }
 
     @Override

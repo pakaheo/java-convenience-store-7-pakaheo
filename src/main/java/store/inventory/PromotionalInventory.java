@@ -1,5 +1,6 @@
 package store.inventory;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.util.List;
 import store.option.PromotionOptionService;
 import store.product.Product;
@@ -22,27 +23,22 @@ public enum PromotionalInventory implements Inventory {
     }
 
     @Override
-    public int deduct(String productName, int count) {
+    public void deduct(String productName, int count) {
+        findByName(productName).deduct(count);
+    }
+
+    public int calculatePromotionDiscount(String productName, int purchaseCount) {
         Product product = findByName(productName);
-        if (product == null) {
-            RegularInventory.REGULAR_INVENTORY.deduct(productName, count);
+        if (isNotPromotional(product)) {
             return 0;
         }
 
-        return processPromotionDeduction(product, count);
+        int freeCount = product.calculateFreeCount(purchaseCount);
+        return freeCount * product.getPrice();
     }
 
-    private int processPromotionDeduction(Product product, int count) {
-        int actualDecrease = product.deduct(count);
-        int nonPromotionCount = count % product.getPromotionEligibleCount();
-        handleRegularInventory(product, count - actualDecrease, nonPromotionCount);
-
-        return actualDecrease;
-    }
-
-    private void handleRegularInventory(Product product, int remainingCount, int nonPromotionCount) {
-        if (remainingCount > 0 && promotionOptionService.meet(product.getName(), remainingCount + nonPromotionCount)) {
-            RegularInventory.REGULAR_INVENTORY.deduct(product.getName(), remainingCount);
-        }
+    private boolean isNotPromotional(Product product) {
+        return product == null || !product.isPromotional() || !product.isProgressingPromotion(
+                DateTimes.now().toLocalDate());
     }
 }

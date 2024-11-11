@@ -2,73 +2,74 @@ package store.order;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import store.discount.DiscountManager;
-import store.option.MembershipOptionService;
+import store.inventory.PromotionalInventory;
+import store.inventory.RegularInventory;
+import store.option.MoreProductOptionService;
 import store.product.Product;
 import store.product.Products;
 
 public class Order {
 
-    private final Products products;
     private final Map<String, Integer> orders;
+    private final Products products;
     private final DiscountManager discountManager;
-    private final MembershipOptionService memberOptionService;
-    private final Receipt receipt = new Receipt();
+    private final MoreProductOptionService moreProductOptionService;
 
-    public Order(final Products products, final OrderDetails orderDetails, DiscountManager discountManager,
-                 MembershipOptionService memberOptionService) {
-        this.products = products;
+    public Order(final OrderDetails orderDetails, Products products, DiscountManager discountManager,
+                 MoreProductOptionService moreProductOptionService) {
         this.orders = orderDetails.getOrders();
+        this.products = products;
         this.discountManager = discountManager;
-        this.memberOptionService = memberOptionService;
+        this.moreProductOptionService = moreProductOptionService;
     }
 
-    public void progress() {
-        Map<Product, Integer> membershipProduct = new HashMap<>();
+    public Receipt progress(boolean hasMembership) {
+        Map<String, Integer> freeProducts = calculateFreeProducts(orders);
+        int total = discountManager.calculateTotal(orders);
+        int promotionDiscount = discountManager.calculatePromotionDiscount(orders);
+        int membershipDiscount = discountManager.calculateMemberShipDiscount(total - promotionDiscount, hasMembership);
 
-        for (Entry<String, Integer> entry : orders.entrySet()) {
-            purchaseProduct(entry.getKey(), entry.getValue(), membershipProduct);
+        updateInventory(orders, freeProducts);
+
+        return new Receipt(convertToProduct(orders), convertToProduct(freeProducts), total, promotionDiscount,
+                membershipDiscount);
+    }
+
+    private Map<String, Integer> calculateFreeProducts(Map<String, Integer> orders) {
+        Map<String, Integer> freeProducts = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : orders.entrySet()) {
+            String productName = entry.getKey();
+            int purchaseCount = entry.getValue();
+
+            int promotionDiscount = PromotionalInventory.PROMOTIONAL_INVENTORY.calculatePromotionDiscount(productName,
+                    purchaseCount);
+
+            Product product = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
+            if (purchaseCount < promotionDiscount && moreProductOptionService.meet(productName,
+                    product.calculateFreeCount(purchaseCount) - purchaseCount)) {
+                purchaseCount = product.calculateFreeCount(purchaseCount);
+            }
+            addFreeProducts(purchaseCount, productName, freeProducts);
         }
-        applyMemberShip(membershipProduct);
-
-        receipt.print();
+        return freeProducts;
     }
 
-    private void purchaseProduct(String productName, int purchaseCount, Map<Product, Integer> membershipProduct) {
-        int adjustedCount = products.calculateOptimizedCount(productName, purchaseCount);
-        int promotionDecrease = products.adjustPurchaseCount(productName, adjustedCount);
-
-        saveMembershipProduct(membershipProduct, productName, purchaseCount);
-        receipt.addItem(productName, adjustedCount, products.findByName(productName).getPrice());
-
-        calculatePayment(productName, adjustedCount, promotionDecrease);
-    }
-
-    private void applyMemberShip(Map<Product, Integer> membershipProduct) {
-        if (memberOptionService.meet()) {
-            int discount = discountManager.calculateMemberShipDiscount(membershipProduct);
-            receipt.applyMembershipDiscount(discount);
-        }
-    }
-
-    private void saveMembershipProduct(Map<Product, Integer> membershipProduct, String productName, int purchaseCount) {
-        Product product = products.findByName(productName);
-        if (isRegularProduct(product)) {
-            membershipProduct.put(product, purchaseCount);
-        }
-    }
-
-    private boolean isRegularProduct(Product product) {
-        return !products.isPromotionProduct(product);
-    }
-
-    private void calculatePayment(String productName, int purchaseCount, int promotionDecrease) {
-        int promotionDiscount = discountManager.calculatePromotionDiscount(productName, promotionDecrease);
-        receipt.applyPromotionDiscount(promotionDiscount);
+    private void addFreeProducts(int promotionDiscount, String productName, Map<String, Integer> freeProducts) {
         if (promotionDiscount > 0) {
-            receipt.addFreeItem(productName,
-                    promotionDiscount / products.findByName(productName).getPrice());
+            Product product = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
+            freeProducts.put(productName, promotionDiscount / product.getPrice());
         }
+    }
+
+    private void updateInventory(Map<String, Integer> orders, Map<String, Integer> freeProducts) {
+        orders.forEach(RegularInventory.REGULAR_INVENTORY::deduct);
+        freeProducts.forEach(PromotionalInventory.PROMOTIONAL_INVENTORY::deduct);
+    }
+
+    private Map<Product, Integer> convertToProduct(Map<String, Integer> orders) {
+        Map<Product, Integer> items = new HashMap<>();
+        orders.forEach((key, value) -> items.put(products.findByName(key), value));
+        return items;
     }
 }

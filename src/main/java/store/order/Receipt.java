@@ -1,11 +1,11 @@
 package store.order;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import store.order.constants.ReceiptFormat;
 import store.order.constants.ReceiptHeader;
 import store.order.constants.ReceiptItems;
+import store.product.Product;
 
 public class Receipt {
 
@@ -14,27 +14,19 @@ public class Receipt {
     private static final String LINE_CHANGE = "\n";
 
 
-    private final List<String> purchaseItems = new ArrayList<>();
-    private final List<String> freeItems = new ArrayList<>();
-    private int totalAmount;
-    private int promotionDiscount;
-    private int membershipDiscount;
+    private final Map<Product, Integer> purchaseItems;
+    private final Map<Product, Integer> freeItems;
+    private final int totalAmount;
+    private final int promotionDiscount;
+    private final int membershipDiscount;
 
-    public void addItem(String name, int quantity, int price) {
-        purchaseItems.add(name + TAB + quantity + TAB + price);
-        totalAmount += price * quantity;
-    }
-
-    public void addFreeItem(String name, int quantity) {
-        freeItems.add(name + TAB + quantity);
-    }
-
-    public void applyPromotionDiscount(int discount) {
-        promotionDiscount += discount;
-    }
-
-    public void applyMembershipDiscount(int discount) {
-        membershipDiscount += discount;
+    public Receipt(Map<Product, Integer> purchaseItems, Map<Product, Integer> freeItems, int totalAmount,
+                   int promotionDiscount, int membershipDiscount) {
+        this.purchaseItems = purchaseItems;
+        this.freeItems = freeItems;
+        this.totalAmount = totalAmount;
+        this.promotionDiscount = promotionDiscount;
+        this.membershipDiscount = membershipDiscount;
     }
 
     public void print() {
@@ -52,25 +44,20 @@ public class Receipt {
         System.out.printf(ReceiptFormat.PURCHASE_HISTORY_FORMAT.valueOf() + LINE_CHANGE,
                 ReceiptItems.PRODUCT_NAME.valueOf(), ReceiptItems.QUANTITY.valueOf(), ReceiptItems.SUB_TOTAL.valueOf());
 
-        for (String item : purchaseItems) {
-            String[] parts = item.split(TAB);
-            System.out.printf(ReceiptFormat.PURCHASE_HISTORY_FORMAT.valueOf() + LINE_CHANGE, parts[0], toInt(parts[1]),
-                    PRICE_FORMAT.format((long) toInt(parts[2]) * toInt(parts[1])));
+        for (Map.Entry<Product, Integer> entry : purchaseItems.entrySet()) {
+            System.out.printf(ReceiptFormat.PURCHASE_HISTORY_FORMAT.valueOf() + LINE_CHANGE, entry.getKey().getName(),
+                    entry.getValue(),
+                    PRICE_FORMAT.format((long) entry.getKey().getPrice() * entry.getValue()));
         }
     }
 
     private void promotionHistory() {
         System.out.println(ReceiptHeader.PROMOTION_HEADER.valueOf());
 
-        for (String item : freeItems) {
-            String[] parts = item.split(TAB);
-            System.out.printf(ReceiptFormat.PROMOTION_HISTORY_FORMAT.valueOf() + LINE_CHANGE, parts[0],
-                    toInt(parts[1]));
+        for (Map.Entry<Product, Integer> entry : freeItems.entrySet()) {
+            System.out.printf(ReceiptFormat.PROMOTION_HISTORY_FORMAT.valueOf() + LINE_CHANGE, entry.getKey().getName(),
+                    entry.getValue());
         }
-    }
-
-    private int toInt(String text) {
-        return Integer.parseInt(text);
     }
 
     private void finalPayment() {

@@ -30,14 +30,10 @@ public class Products {
                 .deduct(productName, purchaseCount);
     }
 
-    public int adjustPurchaseCount(String productName, int purchaseCount) {
-        return PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
-    }
-
-    public int calculateOptimizedCount(String productName, int purchaseCount) {
-        int promotionCount = availablePromotionCount(productName);
-        return adjustForPromotion(productName, purchaseCount, promotionCount);
-    }
+//    public int calculateOptimizedCount(String productName, int purchaseCount) {
+//        int promotionCount = availablePromotionCount(productName);
+//        return adjustForPromotion(productName, purchaseCount, promotionCount);
+//    }
 
     private int adjustForPromotion(String productName, int purchaseCount, int promotionCount) {
         int remainingPromotion = promotionCount - purchaseCount;
@@ -47,9 +43,9 @@ public class Products {
         return purchaseCount;
     }
 
-    public int availablePromotionCount(String productName) {
-        return findByName(productName).getPromotionEligibleCount();
-    }
+//    public int availablePromotionCount(String productName) {
+//        return findByName(productName).getPromotionEligibleCount();
+//    }
 
     private boolean requiresMoreProducts(String productName, int rest) {
         return moreProductOptionService.meet(productName, rest);
@@ -63,10 +59,6 @@ public class Products {
 
     public List<Product> getOrderedProduct(String productName) {
         return productGroup.stream().filter(product -> product.hasName(productName)).toList();
-    }
-
-    public boolean isPromotionProduct(Product product) {
-        return product.isPromotional();
     }
 
     @Override

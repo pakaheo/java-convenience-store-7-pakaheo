@@ -9,5 +9,5 @@ public interface Inventory {
 
     Product findByName(String productName);
 
-    int deduct(String productName, int count);
+    void deduct(String productName, int count);
 }

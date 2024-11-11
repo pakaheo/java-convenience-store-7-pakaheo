@@ -13,11 +13,15 @@ public class BuyNGetOneFree {
     }
 
     public int freeCount(int purchaseCount) {
-        return purchaseCount / (buy + get) * get;
+        return purchaseCount / buy * get;
     }
 
     public int sum() {
         return buy + get;
+    }
+
+    public int getBuy() {
+        return buy;
     }
 
     @Override

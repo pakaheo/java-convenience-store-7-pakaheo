@@ -2,23 +2,29 @@ package controller;
 
 import store.discount.DiscountManager;
 import store.option.MembershipOptionService;
+import store.option.MoreProductOptionService;
 import store.option.MorePurchaseOptionService;
 import store.order.Order;
 import store.order.OrderDetails;
+import store.order.Receipt;
 import store.product.Products;
 import view.InputView;
 import view.OutputView;
 
 public class ConvenienceStore {
 
-    private InputView input;
-    private OutputView output;
-    private MorePurchaseOptionService morePurchaseOptionService;
+    private final InputView input;
+    private final OutputView output;
+    private final MorePurchaseOptionService morePurchaseOptionService;
+    private final MembershipOptionService membershipOptionService;
 
-    public ConvenienceStore(InputView input, OutputView output, MorePurchaseOptionService morePurchaseOptionService) {
+    public ConvenienceStore(final InputView input, final OutputView output,
+                            final MorePurchaseOptionService morePurchaseOptionService,
+                            final MembershipOptionService membershipOptionService) {
         this.input = input;
         this.output = output;
         this.morePurchaseOptionService = morePurchaseOptionService;
+        this.membershipOptionService = membershipOptionService;
     }
 
     public void startPaymentSystem() {
@@ -27,9 +33,10 @@ public class ConvenienceStore {
         do {
             output.introduceProducts(products);
             OrderDetails orderDetails = input.inputProductAndQuantity(products);
-            Order order = new Order(products, orderDetails, new DiscountManager(products),
-                    new MembershipOptionService());
-            order.progress();
+            Order order = new Order(orderDetails, products, new DiscountManager(products),
+                    new MoreProductOptionService());
+            Receipt receipt = order.progress(membershipOptionService.meet());
+            receipt.print();
         } while (morePurchaseOptionService.meet());
     }
 }

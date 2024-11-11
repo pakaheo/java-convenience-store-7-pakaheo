@@ -1,5 +1,6 @@
 package view;
 
+import store.order.Receipt;
 import store.product.Products;
 
 public class OutputView {
@@ -25,5 +26,9 @@ public class OutputView {
 
     protected void introduceMorePurchase() {
         System.out.println(OutputMessage.PRODUCT_OTHER_PRODUCT_MESSAGE.valueOf());
+    }
+
+    public void showReceipt(Receipt receipt) {
+        System.out.println(receipt);
     }
 }
