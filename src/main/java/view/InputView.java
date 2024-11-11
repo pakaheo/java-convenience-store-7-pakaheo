@@ -30,11 +30,12 @@ public class InputView {
 
     public OrderDetails inputProductAndQuantity(Products products) {
         OrderDetails orderDetails = null;
-        try {
-            orderDetails = new OrderDetails(Console.readLine(), products);
-        } catch (IllegalArgumentException exception) {
-            System.out.println(exception.getMessage());
-            inputProductAndQuantity(products);
+        while (orderDetails == null) {
+            try {
+                orderDetails = new OrderDetails(Console.readLine(), products);
+            } catch (IllegalArgumentException exception) {
+                System.out.println(exception.getMessage());
+            }
         }
         return orderDetails;
     }
