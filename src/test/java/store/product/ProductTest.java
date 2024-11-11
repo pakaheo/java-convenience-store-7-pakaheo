@@ -48,4 +48,11 @@ public class ProductTest {
         assertThat(coke.isPromotional()).isTrue();
         assertThat(cider.isPromotional()).isFalse();
     }
+
+    @Test
+    void 상품_이름_반환() {
+        Product product = new Product("콜라", 1_000, 10, null);
+
+        assertThat(product.getName()).isEqualTo("콜라");
+    }
 }

@@ -31,13 +31,6 @@ public class Products {
     }
 
     public int adjustPurchaseCount(String productName, int purchaseCount) {
-//        int promotionCount = availablePromotionCount(productName);
-//        int rest = promotionCount - purchaseCount;
-//
-//        if (rest > 0 && isNeedMoreProduct(productName, rest)) {
-//            purchaseCount = promotionCount;
-//        }
-//        return purchaseCount;
         return PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
     }
 

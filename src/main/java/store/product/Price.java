@@ -21,6 +21,10 @@ public class Price {
         return PRICE_FORMAT.format(number);
     }
 
+    public int getNumber() {
+        return number;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -35,9 +39,5 @@ public class Price {
     @Override
     public int hashCode() {
         return Objects.hash(number);
-    }
-
-    public int getNumber() {
-        return number;
     }
 }

@@ -54,18 +54,6 @@ public class ProductsTest {
         assertThat(coke.toString()).isEqualTo("- 콜라 1,000원 5개");
     }
 
-//    @Test
-//    void 프로모션_재고가_부족하면_일반_재고에서_차감() {
-//        Products products = new Products(List.of("콜라,1000,10,탄산2+1", "콜라,1000,10,null"));
-//        products.deductInventory("콜라", 12);
-//
-//        Product promotionCoke = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName("콜라");
-//        Product regularCoke = RegularInventory.REGULAR_INVENTORY.findByName("콜라");
-//
-//        assertThat(promotionCoke.toString()).isEqualTo("- 콜라 1,000원 재고 없음 탄산2+1");
-//        assertThat(regularCoke.toString()).isEqualTo("- 콜라 1,000원 8개");
-//    }
-
     @Test
     void 존재하지_않는_상품이면_예외() {
         Products products = new Products(List.of("콜라,1000,10,탄산2+1"));
