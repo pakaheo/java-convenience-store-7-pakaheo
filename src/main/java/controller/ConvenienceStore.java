@@ -22,8 +22,8 @@ public class ConvenienceStore {
     }
 
     public void startPaymentSystem() {
-        input.inputPromotionsFromList(input.inputPromotionsFromFile());
-        Products products = input.inputProductsFromList(input.inputProductsFromFile());
+        input.inputPromotions();
+        Products products = input.inputProducts();
         do {
             output.introduceProducts(products);
             OrderDetails orderDetails = input.inputProductAndQuantity(products);

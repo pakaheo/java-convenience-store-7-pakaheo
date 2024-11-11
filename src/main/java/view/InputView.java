@@ -2,11 +2,6 @@ package view;
 
 import camp.nextstep.edu.missionutils.Console;
 import constants.ErrorMessage;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import store.order.OrderDetails;
 import store.product.Products;
 import store.promotion.Promotions;
@@ -19,42 +14,18 @@ public class InputView {
     private static final String YES = "Y";
     private static final String NO = "N";
 
-    public List<String> inputProductsFromFile() {
-        List<String> productContents = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(PRODUCTS_FILE_PATH))) {
-            String productContent;
-            reader.readLine();
-            while ((productContent = reader.readLine()) != null) {
-                productContents.add(productContent);
-            }
-        } catch (IOException ioException) {
-            throw new IllegalArgumentException(NOT_FOUND_FILE);
-        }
-        return productContents;
+    private final ResourceReader resourceReader;
+
+    public InputView() {
+        resourceReader = new ResourceReader();
     }
 
-    public Products inputProductsFromList(List<String> productContents) {
-        return new Products(productContents);
+    public Products inputProducts() {
+        return new Products(resourceReader.read(PRODUCTS_FILE_PATH));
     }
 
-    public List<String> inputPromotionsFromFile() {
-        List<String> promotionContents = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(PROMOTIONS_FILE_PATH))) {
-            String promotionContent;
-            reader.readLine();
-            while ((promotionContent = reader.readLine()) != null) {
-                promotionContents.add(promotionContent);
-            }
-        } catch (IOException ioException) {
-            throw new IllegalArgumentException(NOT_FOUND_FILE);
-        }
-
-        return promotionContents;
-    }
-
-    public Promotions inputPromotionsFromList(List<String> promotionContents) {
-        return new Promotions(promotionContents);
+    public Promotions inputPromotions() {
+        return new Promotions(resourceReader.read(PROMOTIONS_FILE_PATH));
     }
 
     public OrderDetails inputProductAndQuantity(Products products) {
