@@ -24,8 +24,8 @@ public class Promotion {
         return promotionTerm.isValid(now);
     }
 
-    public int calculateDiscount(int purchaseCount) {
-        return buyNGetOneFree.discount(purchaseCount);
+    public int freeGet(int purchaseCount) {
+        return buyNGetOneFree.freeCount(purchaseCount);
     }
 
     public int getTotal() {
