@@ -15,12 +15,14 @@ public class PriceTest {
     @Test
     void 곱셈() {
         Price price = new Price(1_000);
+
         assertThat(price.multiply(3)).isEqualTo(3_000);
     }
 
     @Test
     void 숫자_세_자리마다_쉼표로_끊기() {
         Price price = new Price(1_000);
+        
         assertThat(price.formalize()).isEqualTo("1,000");
     }
 }

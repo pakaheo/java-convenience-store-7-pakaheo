@@ -11,18 +11,21 @@ public class QuantityTest {
     @Test
     void 수량_생성() {
         Quantity quantity = new Quantity(10);
+        
         assertThat(quantity).isEqualTo(new Quantity(10));
     }
 
     @Test
     void 최솟값_구하기() {
         Quantity quantity = new Quantity(10);
+
         assertThat(quantity.calculateMinimum(9)).isEqualTo(9);
     }
 
     @Test
     void 수량_줄이기() {
         Quantity quantity = new Quantity(10);
+
         assertThat(quantity.reduce(5)).isEqualTo(new Quantity(5));
     }
 
