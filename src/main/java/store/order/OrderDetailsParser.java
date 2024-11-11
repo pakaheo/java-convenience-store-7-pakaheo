@@ -73,7 +73,15 @@ public class OrderDetailsParser {
     }
 
     private static int getPurchaseCount(Matcher matcher) {
-        return toInt(matcher.group(PURCHASE_COUNT_PLACE));
+        int purchaseCount = toInt(matcher.group(PURCHASE_COUNT_PLACE));
+        checkPositive(purchaseCount);
+        return purchaseCount;
+    }
+
+    private static void checkPositive(int purchaseCount) {
+        if (purchaseCount <= 0) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+        }
     }
 
     private static int toInt(String text) {
