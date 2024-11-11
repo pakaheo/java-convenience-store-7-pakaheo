@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 class ApplicationTest extends NsTest {
-
     @Test
     void 파일에_있는_상품_목록_출력() {
         assertSimpleTest(() -> {
