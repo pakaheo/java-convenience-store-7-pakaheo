@@ -6,18 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import view.InputView;
-import view.ResourceReader;
 
 class ApplicationTest extends NsTest {
-    private InputView inputView;
-
-    @BeforeEach
-    void setUp() {
-        inputView = new InputView(new ResourceReader());
-    }
 
     @Test
     void 파일에_있는_상품_목록_출력() {
