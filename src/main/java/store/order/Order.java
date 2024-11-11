@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import store.discount.DiscountManager;
 import store.inventory.PromotionalInventory;
-import store.inventory.RegularInventory;
 import store.option.MoreProductOptionService;
+import store.option.PromotionOptionService;
 import store.product.Product;
 import store.product.Products;
 
@@ -15,13 +15,15 @@ public class Order {
     private final Products products;
     private final DiscountManager discountManager;
     private final MoreProductOptionService moreProductOptionService;
+    private final PromotionOptionService promotionOptionService;
 
     public Order(final OrderDetails orderDetails, Products products, DiscountManager discountManager,
-                 MoreProductOptionService moreProductOptionService) {
+                 MoreProductOptionService moreProductOptionService, PromotionOptionService promotionOptionService) {
         this.orders = orderDetails.getOrders();
         this.products = products;
         this.discountManager = discountManager;
         this.moreProductOptionService = moreProductOptionService;
+        this.promotionOptionService = promotionOptionService;
     }
 
     public Receipt progress(boolean hasMembership) {
@@ -42,28 +44,32 @@ public class Order {
             String productName = entry.getKey();
             int purchaseCount = entry.getValue();
 
-            // 일반 재고일 때
             if (PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName) == null) {
-                return freeProducts;
+                continue;
             }
 
             int promotionDiscount = PromotionalInventory.PROMOTIONAL_INVENTORY.calculatePromotionDiscount(productName,
                     purchaseCount);
-
-            Product product = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
-            int requiredForPromotion = product.getRequiredPromotion();
-
-            if (purchaseCount < requiredForPromotion) {
-                int additionalCount = requiredForPromotion - purchaseCount;
-                if (moreProductOptionService.meet(productName, additionalCount)) {
-                    purchaseCount = requiredForPromotion;
-                    orders.put(productName, purchaseCount);
-                }
-            }
-
+            moreProductCase(productName, purchaseCount);
             addFreeProducts(promotionDiscount, productName, freeProducts);
         }
         return freeProducts;
+    }
+
+    private void moreProductCase(String productName, int purchaseCount) {
+        Product product = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
+        int requiredForPromotion = product.getRequiredPromotion();
+
+        if (purchaseCount < requiredForPromotion) {
+            wantMoreProduct(productName, purchaseCount, requiredForPromotion);
+        }
+    }
+
+    private void wantMoreProduct(String productName, int purchaseCount, int requiredForPromotion) {
+        if (moreProductOptionService.meet(productName, requiredForPromotion - purchaseCount)) {
+            purchaseCount = requiredForPromotion;
+            orders.put(productName, purchaseCount);
+        }
     }
 
     private void addFreeProducts(int promotionDiscount, String productName, Map<String, Integer> freeProducts) {
@@ -74,7 +80,7 @@ public class Order {
     }
 
     private void updateInventory(Map<String, Integer> orders, Map<String, Integer> freeProducts) {
-        orders.forEach(RegularInventory.REGULAR_INVENTORY::deduct);
+        orders.forEach(PromotionalInventory.PROMOTIONAL_INVENTORY::deduct);
         freeProducts.forEach(PromotionalInventory.PROMOTIONAL_INVENTORY::deduct);
     }
 

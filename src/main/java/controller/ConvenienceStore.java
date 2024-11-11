@@ -4,6 +4,7 @@ import store.discount.DiscountManager;
 import store.option.MembershipOptionService;
 import store.option.MoreProductOptionService;
 import store.option.MorePurchaseOptionService;
+import store.option.PromotionOptionService;
 import store.order.Order;
 import store.order.OrderDetails;
 import store.order.Receipt;
@@ -34,7 +35,7 @@ public class ConvenienceStore {
             output.introduceProducts(products);
             OrderDetails orderDetails = input.inputProductAndQuantity(products);
             Order order = new Order(orderDetails, products, new DiscountManager(products),
-                    new MoreProductOptionService());
+                    new MoreProductOptionService(), new PromotionOptionService());
             Receipt receipt = order.progress(membershipOptionService.meet());
             receipt.print();
         } while (morePurchaseOptionService.meet());
