@@ -21,11 +21,11 @@ public class InputView {
     }
 
     public Products inputProducts() {
-        return new Products(resourceReader.read(PRODUCTS_FILE_PATH));
+        return new Products(resourceReader.createResources(PRODUCTS_FILE_PATH));
     }
 
     public Promotions inputPromotions() {
-        return new Promotions(resourceReader.read(PROMOTIONS_FILE_PATH));
+        return new Promotions(resourceReader.createResources(PROMOTIONS_FILE_PATH));
     }
 
     public OrderDetails inputProductAndQuantity(Products products) {
