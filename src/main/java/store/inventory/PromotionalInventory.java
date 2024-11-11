@@ -29,20 +29,20 @@ public enum PromotionalInventory implements Inventory {
             return 0;
         }
 
-        return calculateActualDecrease(product, productName, count);
+        return processPromotionDeduction(product, count);
     }
 
-    private int calculateActualDecrease(Product product, String productName, int count) {
+    private int processPromotionDeduction(Product product, int count) {
         int actualDecrease = product.deduct(count);
         int nonPromotionCount = count % product.getPromotionEligibleCount();
-        changeRegularInventory(productName, count - actualDecrease, nonPromotionCount);
+        handleRegularInventory(product, count - actualDecrease, nonPromotionCount);
 
         return actualDecrease;
     }
 
-    private void changeRegularInventory(String productName, int remainingCount, int nonPromotionCount) {
-        if (remainingCount > 0 && promotionOptionService.meet(productName, remainingCount)) {
-            RegularInventory.REGULAR_INVENTORY.deduct(productName, remainingCount - nonPromotionCount);
+    private void handleRegularInventory(Product product, int remainingCount, int nonPromotionCount) {
+        if (remainingCount > 0 && promotionOptionService.meet(product.getName(), remainingCount)) {
+            RegularInventory.REGULAR_INVENTORY.deduct(product.getName(), remainingCount - nonPromotionCount);
         }
     }
 }

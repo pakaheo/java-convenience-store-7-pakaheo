@@ -12,10 +12,6 @@ public class DiscountManager {
         this.products = products;
     }
 
-    public int calculateTotal(String productName, int purchaseCount) {
-        return products.findByName(productName).calculateSubTotal(purchaseCount);
-    }
-
     public int calculatePromotionDiscount(String productName, int promotionDeducted) {
         return products.getOrderedProduct(productName).stream()
                 .mapToInt(product -> product.calculatePromotionDiscount(promotionDeducted))

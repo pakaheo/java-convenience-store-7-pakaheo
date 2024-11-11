@@ -26,26 +26,26 @@ public class Order {
 
     public void progress() {
         Map<Product, Integer> membershipProduct = new HashMap<>();
-        int payment = 0;
 
         for (Entry<String, Integer> entry : orders.entrySet()) {
-            payment += purchaseProduct(entry.getKey(), entry.getValue(), membershipProduct);
+            purchaseProduct(entry.getKey(), entry.getValue(), membershipProduct);
         }
-        applyMemberShip(payment, membershipProduct);
+        applyMemberShip(membershipProduct);
 
         receipt.print();
     }
 
-    private int purchaseProduct(String productName, int purchaseCount, Map<Product, Integer> membershipProduct) {
-        purchaseCount = products.optimize(productName, purchaseCount);
-        int promotionDecrease = getPromotionDecrease(productName, purchaseCount);
-        saveMembershipProduct(membershipProduct, productName, purchaseCount);
-        receipt.addItem(productName, purchaseCount, products.findByName(productName).getPrice());
+    private void purchaseProduct(String productName, int purchaseCount, Map<Product, Integer> membershipProduct) {
+        int adjustedCount = products.calculateOptimizedCount(productName, purchaseCount);
+        int promotionDecrease = products.adjustPurchaseCount(productName, adjustedCount);
 
-        return calculatePayment(productName, purchaseCount, promotionDecrease);
+        saveMembershipProduct(membershipProduct, productName, purchaseCount);
+        receipt.addItem(productName, adjustedCount, products.findByName(productName).getPrice());
+
+        calculatePayment(productName, adjustedCount, promotionDecrease);
     }
 
-    private void applyMemberShip(int payment, Map<Product, Integer> membershipProduct) {
+    private void applyMemberShip(Map<Product, Integer> membershipProduct) {
         if (memberOptionService.meet()) {
             int discount = discountManager.calculateMemberShipDiscount(membershipProduct);
             receipt.applyMembershipDiscount(discount);
@@ -63,18 +63,12 @@ public class Order {
         return !products.isPromotionProduct(product);
     }
 
-    private int calculatePayment(String productName, int purchaseCount, int promotionDecrease) {
-        int total = discountManager.calculateTotal(productName, purchaseCount);
+    private void calculatePayment(String productName, int purchaseCount, int promotionDecrease) {
         int promotionDiscount = discountManager.calculatePromotionDiscount(productName, promotionDecrease);
+        receipt.applyPromotionDiscount(promotionDiscount);
         if (promotionDiscount > 0) {
             receipt.addFreeItem(productName,
                     promotionDiscount / products.findByName(productName).getPrice());
         }
-        receipt.applyPromotionDiscount(promotionDiscount);
-        return total - promotionDiscount;
-    }
-
-    private int getPromotionDecrease(String productName, int purchaseCount) {
-        return products.deductInventory(productName, purchaseCount);
     }
 }

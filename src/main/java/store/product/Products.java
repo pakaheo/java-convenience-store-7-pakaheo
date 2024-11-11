@@ -25,17 +25,31 @@ public class Products {
         PromotionalInventory.PROMOTIONAL_INVENTORY.stackProducts(productGroup);
     }
 
-    public int deductInventory(String productName, int purchaseCount) {
-        return PromotionalInventory.PROMOTIONAL_INVENTORY
+    public void deductInventory(String productName, int purchaseCount) {
+        PromotionalInventory.PROMOTIONAL_INVENTORY
                 .deduct(productName, purchaseCount);
     }
 
-    public int optimize(String productName, int purchaseCount) {
-        int promotionCount = availablePromotionCount(productName);
-        int rest = promotionCount - purchaseCount;
+    public int adjustPurchaseCount(String productName, int purchaseCount) {
+//        int promotionCount = availablePromotionCount(productName);
+//        int rest = promotionCount - purchaseCount;
+//
+//        if (rest > 0 && isNeedMoreProduct(productName, rest)) {
+//            purchaseCount = promotionCount;
+//        }
+//        return purchaseCount;
+        return PromotionalInventory.PROMOTIONAL_INVENTORY.deduct(productName, purchaseCount);
+    }
 
-        if (rest > 0 && isNeedMoreProduct(productName, rest)) {
-            purchaseCount = promotionCount;
+    public int calculateOptimizedCount(String productName, int purchaseCount) {
+        int promotionCount = availablePromotionCount(productName);
+        return adjustForPromotion(productName, purchaseCount, promotionCount);
+    }
+
+    private int adjustForPromotion(String productName, int purchaseCount, int promotionCount) {
+        int remainingPromotion = promotionCount - purchaseCount;
+        if (remainingPromotion > 0 && requiresMoreProducts(productName, remainingPromotion)) {
+            return promotionCount;
         }
         return purchaseCount;
     }
@@ -44,7 +58,7 @@ public class Products {
         return findByName(productName).getPromotionEligibleCount();
     }
 
-    private boolean isNeedMoreProduct(String productName, int rest) {
+    private boolean requiresMoreProducts(String productName, int rest) {
         return moreProductOptionService.meet(productName, rest);
     }
 

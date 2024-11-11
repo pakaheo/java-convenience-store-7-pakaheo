@@ -1,6 +1,7 @@
 package store.product;
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import java.time.LocalDate;
 import java.util.Objects;
 import store.discount.MemberShip;
 import store.promotion.Promotion;
@@ -41,7 +42,11 @@ public class Product {
     }
 
     public boolean isPromotional() {
-        return promotion != null && promotion.isActive(DateTimes.now().toLocalDate());
+        return promotion != null;
+    }
+
+    public boolean isProgressingPromotion(LocalDate now) {
+        return promotion.isActive(now);
     }
 
     public int deduct(int count) {
@@ -51,7 +56,7 @@ public class Product {
     }
 
     public int calculatePromotionDiscount(int purchaseCount) {
-        if (isPromotional()) {
+        if (isPromotional() && isProgressingPromotion(DateTimes.now().toLocalDate())) {
             return price.multiply(promotion.freeGet(purchaseCount));
         }
         return 0;
@@ -69,6 +74,10 @@ public class Product {
             return 0;
         }
         return promotion.getTotal();
+    }
+
+    public String getName() {
+        return name.toString();
     }
 
     public int getPrice() {
