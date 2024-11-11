@@ -77,6 +77,10 @@ public class OrderDetailsParser {
     }
 
     private static int toInt(String text) {
-        return Integer.parseInt(text);
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException numberFormatException) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+        }
     }
 }
