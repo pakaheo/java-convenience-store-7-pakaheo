@@ -17,7 +17,12 @@ public class OrderDetails {
     }
 
     private void validateInput(Map<String, Integer> orders) {
+        orders.forEach(this::checkExist);
         orders.forEach(this::checkQuantity);
+    }
+
+    private void checkExist(String productName, int purchaseCount) {
+        products.findByName(productName);
     }
 
     public void checkQuantity(String productName, int purchaseCount) {

@@ -14,12 +14,19 @@ public class OrderDetailsParser {
     private static final Character SEPARATOR = ',';
 
     public static Map<String, Integer> parse(String input) {
+        checkEmpty(input);
         Map<String, Integer> orders = new HashMap<>();
 
         int lastMatch = addOrders(orders, input);
         checkInvalidInput(lastMatch, input.length());
-        
+
         return orders;
+    }
+
+    private static void checkEmpty(String input) {
+        if (input == null || input.isEmpty()) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+        }
     }
 
     private static int addOrders(Map<String, Integer> orders, String input) {

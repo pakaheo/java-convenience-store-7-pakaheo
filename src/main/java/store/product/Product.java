@@ -52,7 +52,7 @@ public class Product {
 
     public int calculatePromotionDiscount(int purchaseCount) {
         if (isPromotional()) {
-            return price.multiply(promotion.calculateDiscount(purchaseCount));
+            return price.multiply(promotion.freeGet(purchaseCount));
         }
         return 0;
     }

@@ -11,7 +11,7 @@ public class Name {
     }
 
     public boolean match(String productName) {
-        return text.equals(productName);
+        return text.trim().equals(productName.trim());
     }
 
     @Override
