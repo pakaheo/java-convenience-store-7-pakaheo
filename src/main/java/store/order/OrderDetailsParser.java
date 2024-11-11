@@ -33,11 +33,19 @@ public class OrderDetailsParser {
         int lastMatch = 0;
         Matcher matcher = createMatcher(input);
         while (canFind(matcher)) {
+            String productName = getProductName(matcher);
+            checkDuplicate(orders, productName);
             orders.put(getProductName(matcher), getPurchaseCount(matcher));
             lastMatch = matcher.end();
             checkSeparate(lastMatch, input);
         }
         return lastMatch;
+    }
+
+    private static void checkDuplicate(Map<String, Integer> orders, String productName) {
+        if (orders.containsKey(productName)) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+        }
     }
 
     private static void checkSeparate(int lastMatch, String input) {

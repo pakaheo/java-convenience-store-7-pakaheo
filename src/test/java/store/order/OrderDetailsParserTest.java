@@ -23,4 +23,13 @@ public class OrderDetailsParserTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
     }
+
+    @Test
+    void 상품명_입력이_중복된_경우() {
+        String input = "[콜라-3],[콜라-4]";
+
+        assertThatThrownBy(() -> OrderDetailsParser.parse(input))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.INVALID_FORMAT_INPUT.valueOf());
+    }
 }
