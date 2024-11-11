@@ -22,13 +22,6 @@ public class Quantity {
         return this;
     }
 
-    public String display() {
-        if (number == 0) {
-            return NO_QUANTITY;
-        }
-        return number + QUANTITY_UNIT;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -43,5 +36,13 @@ public class Quantity {
     @Override
     public int hashCode() {
         return Objects.hash(number);
+    }
+
+    @Override
+    public String toString() {
+        if (number == 0) {
+            return NO_QUANTITY;
+        }
+        return number + QUANTITY_UNIT;
     }
 }

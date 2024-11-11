@@ -95,7 +95,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return DASH + SPACE + name.toString() + SPACE + price.formalize() + PRICE_UNIT + SPACE + quantity.display()
+        return DASH + SPACE + name.toString() + SPACE + price.formalize() + PRICE_UNIT + SPACE + quantity.toString()
                 + displayPromotion();
     }
 
