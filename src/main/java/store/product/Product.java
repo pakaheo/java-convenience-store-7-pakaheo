@@ -69,7 +69,7 @@ public class Product {
     }
 
     public int getRequiredPromotion() {
-        return promotion.getTotal();
+        return promotion.getRequired();
     }
 
     @Override

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import store.discount.DiscountManager;
 import store.inventory.PromotionalInventory;
+import store.inventory.RegularInventory;
 import store.option.MoreProductOptionService;
-import store.option.PromotionOptionService;
 import store.product.Product;
 import store.product.Products;
 
@@ -15,15 +15,13 @@ public class Order {
     private final Products products;
     private final DiscountManager discountManager;
     private final MoreProductOptionService moreProductOptionService;
-    private final PromotionOptionService promotionOptionService;
 
     public Order(final OrderDetails orderDetails, Products products, DiscountManager discountManager,
-                 MoreProductOptionService moreProductOptionService, PromotionOptionService promotionOptionService) {
+                 MoreProductOptionService moreProductOptionService) {
         this.orders = orderDetails.getOrders();
         this.products = products;
         this.discountManager = discountManager;
         this.moreProductOptionService = moreProductOptionService;
-        this.promotionOptionService = promotionOptionService;
     }
 
     public Receipt progress(boolean hasMembership) {
@@ -41,17 +39,11 @@ public class Order {
     private Map<String, Integer> calculateFreeProducts(Map<String, Integer> orders) {
         Map<String, Integer> freeProducts = new HashMap<>();
         for (Map.Entry<String, Integer> entry : orders.entrySet()) {
-            String productName = entry.getKey();
-            int purchaseCount = entry.getValue();
-
-            if (PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName) == null) {
-                continue;
+            if (PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(entry.getKey()) == null) {
+                return freeProducts;
             }
-
-            int promotionDiscount = PromotionalInventory.PROMOTIONAL_INVENTORY.calculatePromotionDiscount(productName,
-                    purchaseCount);
-            moreProductCase(productName, purchaseCount);
-            addFreeProducts(promotionDiscount, productName, freeProducts);
+            moreProductCase(entry.getKey(), entry.getValue());
+            addFreeProducts(entry.getKey(), entry.getValue(), freeProducts);
         }
         return freeProducts;
     }
@@ -61,18 +53,17 @@ public class Order {
         int requiredForPromotion = product.getRequiredPromotion();
 
         if (purchaseCount < requiredForPromotion) {
-            wantMoreProduct(productName, purchaseCount, requiredForPromotion);
+            int additionalCount = requiredForPromotion - purchaseCount;
+            if (moreProductOptionService.meet(productName, additionalCount)) {
+                purchaseCount = requiredForPromotion;
+                orders.put(productName, purchaseCount);
+            }
         }
     }
 
-    private void wantMoreProduct(String productName, int purchaseCount, int requiredForPromotion) {
-        if (moreProductOptionService.meet(productName, requiredForPromotion - purchaseCount)) {
-            purchaseCount = requiredForPromotion;
-            orders.put(productName, purchaseCount);
-        }
-    }
-
-    private void addFreeProducts(int promotionDiscount, String productName, Map<String, Integer> freeProducts) {
+    private void addFreeProducts(String productName, int purchaseCount, Map<String, Integer> freeProducts) {
+        int promotionDiscount = PromotionalInventory.PROMOTIONAL_INVENTORY.calculatePromotionDiscount(productName,
+                purchaseCount);
         if (promotionDiscount > 0) {
             Product product = PromotionalInventory.PROMOTIONAL_INVENTORY.findByName(productName);
             freeProducts.put(productName, promotionDiscount / product.getPrice());
@@ -80,7 +71,7 @@ public class Order {
     }
 
     private void updateInventory(Map<String, Integer> orders, Map<String, Integer> freeProducts) {
-        orders.forEach(PromotionalInventory.PROMOTIONAL_INVENTORY::deduct);
+        orders.forEach(RegularInventory.REGULAR_INVENTORY::deduct);
         freeProducts.forEach(PromotionalInventory.PROMOTIONAL_INVENTORY::deduct);
     }
 
