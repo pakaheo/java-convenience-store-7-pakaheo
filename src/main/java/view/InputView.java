@@ -16,8 +16,8 @@ public class InputView {
 
     private final ResourceReader resourceReader;
 
-    public InputView() {
-        resourceReader = new ResourceReader();
+    public InputView(ResourceReader resourceReader) {
+        this.resourceReader = new ResourceReader();
     }
 
     public Products inputProducts() {
